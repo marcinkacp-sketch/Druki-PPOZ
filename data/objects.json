@@ -1,0 +1,586 @@
+[
+  {
+    "id": "word-33",
+    "name": "Akademia Muzyczna im. K. Szymanowskiego",
+    "city": "Katowice",
+    "street": "Zacisze 3",
+    "source": "Akademia Muzyczna im. K. Szymanowskiego w Katowicach ul. Zacisze 3",
+    "needsReview": false
+  },
+  {
+    "id": "word-34",
+    "name": "Bombardier Transportation (ZWUS) Polska Sp. z o.o.",
+    "city": "Katowice",
+    "street": "Modelarskla 12",
+    "source": "Bombardier Transportation (ZWUS) Polska Sp.z o.o. Katowice ul. Modelarskla 12",
+    "needsReview": true
+  },
+  {
+    "id": "word-35",
+    "name": "Centralny Ośrodek Informatyki Górnictwa",
+    "city": "Katowice",
+    "street": "Mikołowska 100",
+    "source": "Centralny Ośrodek Informatyki Górnictwa Katowice ul. Mikołowska 100",
+    "needsReview": false
+  },
+  {
+    "id": "word-36",
+    "name": "CORTINA",
+    "city": "Katowice",
+    "street": "Wolnego 8",
+    "source": "CORTINA Katowice ul. Wolnego 8",
+    "needsReview": false
+  },
+  {
+    "id": "word-37",
+    "name": "Centrum Pediatrii",
+    "city": "Sosnowiec",
+    "street": "Gabrieli Zapolskiej 3",
+    "source": "Centrum Pediatrii Sosnowiec ul. Gabrieli Zapolskiej 3",
+    "needsReview": false
+  },
+  {
+    "id": "word-38",
+    "name": "Dom Pomocy Społecznej „ Senior”",
+    "city": "Ruda Śląska",
+    "street": "A. Puszkina 7",
+    "source": "Dom Pomocy Społecznej „ Senior” ul. A. Puszkina 7 Rudzie Śląskiej",
+    "needsReview": false
+  },
+  {
+    "id": "word-39",
+    "name": "Całodobowy Prywatny Dom Opieki dla Osób Starszych SZAFIREK",
+    "city": "Czeladź",
+    "street": "Bytomska 82",
+    "source": "Całodobowy Prywatny Dom Opieki dla Osób Starszych SZAFIREK Czeladź ul. Bytomska 82",
+    "needsReview": false
+  },
+  {
+    "id": "word-41",
+    "name": "Schronisko dla bezdomnych kobiet i kobiet z dziećmi",
+    "city": "Katowice",
+    "street": "Orkana 7a",
+    "source": "Schronisko dla bezdomnych kobiet i kobiet z dziećmi Orkana 7a Katowice",
+    "needsReview": false
+  },
+  {
+    "id": "word-42",
+    "name": "Dom Pomocy Społecznej – Brzeziny Śląskie",
+    "city": "Piekary Śląskie",
+    "street": "Trautmana",
+    "source": "Dom Pomocy Społecznej Piekary Śląskie Brzeziny Śląskie ul. Trautmana",
+    "needsReview": false
+  },
+  {
+    "id": "word-43",
+    "name": "Dom Pomocy Społecznej",
+    "city": "Zawiercie",
+    "street": "Rzemieślnicza 9",
+    "source": "Dom Pomocy Społecznej Zawiercie ul. Rzemieślnicza 9",
+    "needsReview": false
+  },
+  {
+    "id": "word-44",
+    "name": "Dom Dziecka Nr 1",
+    "city": "Bytom",
+    "street": "Matki Ewy 5",
+    "source": "Dom Dziecka Nr 1 Bytom ul. Matki Ewy 5",
+    "needsReview": false
+  },
+  {
+    "id": "word-45",
+    "name": "Dom Zdrojowy",
+    "city": "Jastrzębie-Zdrój",
+    "street": "Witczaka 5",
+    "source": "Dom Zdrojowy Jastrzębie Zdrój ul. Witczaka 5",
+    "needsReview": false
+  },
+  {
+    "id": "word-46",
+    "name": "Dom Studencki „BABILON”",
+    "city": "Katowice",
+    "street": "Krasińskiego 25a",
+    "source": "Dom Studencki „BABILON” Katowice ul. Krasińskiego 25a",
+    "needsReview": false
+  },
+  {
+    "id": "word-47",
+    "name": "Dom Studencki „BARBARA”",
+    "city": "Gliwice",
+    "street": "M.C.Skłodowskiej 7",
+    "source": "Dom Studencki „BARBARA” Gliwice ul. M.C.Skłodowskiej 7",
+    "needsReview": false
+  },
+  {
+    "id": "word-48",
+    "name": "Dom Studencki „ELEKTRON”",
+    "city": "Gliwice",
+    "street": "Kujawska 6",
+    "source": "Dom Studencki „ELEKTRON” GLIWICE ul. Kujawska 6",
+    "needsReview": false
+  },
+  {
+    "id": "word-49",
+    "name": "Dom Studencki „KAROLINKA”",
+    "city": "Gliwice",
+    "street": "Kujawska 8",
+    "source": "Dom Studencki „KAROLINKA” GLIWICE ul. Kujawska 8",
+    "needsReview": false
+  },
+  {
+    "id": "word-50",
+    "name": "Dom Studencki „ONDRASZEK”",
+    "city": "Gliwice",
+    "street": "Kujawska 2",
+    "source": "Dom Studencki „ONDRASZEK” Gliwice ul. Kujawska 2",
+    "needsReview": false
+  },
+  {
+    "id": "word-51",
+    "name": "Dom Studencki „PIAST”",
+    "city": "Gliwice",
+    "street": "Łużycka 30",
+    "source": "Dom Studencki „PIAST” Gliwice ul. Łużycka 30",
+    "needsReview": false
+  },
+  {
+    "id": "word-52",
+    "name": "Dom Studencki „RZEPICHA”",
+    "city": "Gliwice",
+    "street": "Łużycka 28",
+    "source": "Dom Studencki „RZEPICHA” Gliwice ul. Łużycka 28",
+    "needsReview": false
+  },
+  {
+    "id": "word-53",
+    "name": "Dom Studencki „SEZAM”",
+    "city": "Gliwice",
+    "street": "Pszczyńska 89A",
+    "source": "Dom Studencki „SEZAM” GLIWICE ul. Pszczyńska 89A",
+    "needsReview": false
+  },
+  {
+    "id": "word-54",
+    "name": "Dom Studencki „SOLARIS”",
+    "city": "Gliwice",
+    "street": "Kochanowskiego 37",
+    "source": "Dom Studencki „SOLARIS” GLIWICE ul. Kochanowskiego 37",
+    "needsReview": false
+  },
+  {
+    "id": "word-55",
+    "name": "Dom Studencki „STRZECHA”",
+    "city": "Gliwice",
+    "street": "Kujawska 4",
+    "source": "Dom Studencki „STRZECHA” Gliwice ul. Kujawska 4",
+    "needsReview": false
+  },
+  {
+    "id": "word-56",
+    "name": "Dom Studencki „ZAŚCIANEK”",
+    "city": "Katowice",
+    "street": "Franciszkańska 8",
+    "source": "Dom Studencki „ZAŚCIANEK” ul. Franciszkańska 8 KATOWICE",
+    "needsReview": false
+  },
+  {
+    "id": "word-57",
+    "name": "Dom Studencki „ZIEMOWIT”",
+    "city": "Gliwice",
+    "street": "Łużycka 32",
+    "source": "Dom Studencki „ZIEMOWIT” Gliwice ul. Łużycka 32",
+    "needsReview": false
+  },
+  {
+    "id": "word-58",
+    "name": "Dom Pobytu dla Osób Starszych",
+    "city": "Czeladź",
+    "street": "Bytomska 82",
+    "source": "Dom Pobytu dla Osób Starszych CZELADŹ ul. Bytomska 82",
+    "needsReview": false
+  },
+  {
+    "id": "word-59",
+    "name": "DOMINO Sp. z o.o.",
+    "city": "Ruda Śląska",
+    "street": "Westerplatte 36",
+    "source": "DOMINO Sp. z o.o. ul. Westerplatte 36 RUDA ŚL.",
+    "needsReview": false
+  },
+  {
+    "id": "word-60",
+    "name": "Elektrociepłownia „ KATOWICE ”",
+    "city": "Katowice",
+    "street": "Siemianowicka 60",
+    "source": "Elektrociepłownia „ KATOWICE ” Katowice ul. Siemianowicka 60",
+    "needsReview": false
+  },
+  {
+    "id": "word-61",
+    "name": "Główny Instytut Górnictwa",
+    "city": "Katowice",
+    "street": "Al. Korfantego 79",
+    "source": "Główny Instytut Górnictwa Katowice Al. Korfantego 79",
+    "needsReview": false
+  },
+  {
+    "id": "word-62",
+    "name": "HoloSerwis Sp. z o.o.",
+    "city": "Katowice",
+    "street": "Modelarska 12",
+    "source": "HoloSerwis Sp. z o.o. Katowice ul. Modelarska 12",
+    "needsReview": false
+  },
+  {
+    "id": "word-63",
+    "name": "Hotel „DIAMENT” VACANZA",
+    "city": "Siemianowice Śląskie",
+    "street": "Olimpijska 4",
+    "source": "Hotel „DIAMENT” VACANZA ul. Olimpijska 4 Siemianowicach Śląskich",
+    "needsReview": false
+  },
+  {
+    "id": "word-64",
+    "name": "Hotel „DIAMENT”",
+    "city": "Katowice",
+    "street": "Dworcowa 9",
+    "source": "Hotel „DIAMENT” KATOWICE ul. Dworcowa 9",
+    "needsReview": false
+  },
+  {
+    "id": "word-65",
+    "name": "Hotel „DIAMENT”",
+    "city": "Ustroń",
+    "street": "Zdrojowa 3",
+    "source": "Hotel „DIAMENT” USTROŃ ul. Zdrojowa 3",
+    "needsReview": false
+  },
+  {
+    "id": "word-66",
+    "name": "Hotel „DIAMENT”",
+    "city": "Gliwice",
+    "street": "Zwycięstwa 30",
+    "source": "Hotel „DIAMENT” Gliwice ul. Zwycięstwa 30",
+    "needsReview": false
+  },
+  {
+    "id": "word-67",
+    "name": "Hotel „KATOWICE”",
+    "city": "Katowice",
+    "street": "Al. Korfantego 9",
+    "source": "Hotel „KATOWICE” Katowice Al. Korfantego 9",
+    "needsReview": false
+  },
+  {
+    "id": "word-68",
+    "name": "Hotel Diament Arsenal Palace",
+    "city": "Chorzów",
+    "street": "Paderewskiego 35",
+    "source": "Hotel Diament Arsenal Palace Chorzów ul. Paderewskiego 35",
+    "needsReview": false
+  },
+  {
+    "id": "word-69",
+    "name": "Hotel „DIAMENT”",
+    "city": "Jastrzębie-Zdrój",
+    "street": "Leśna 4",
+    "source": "Hotel „DIAMENT” Jastrzębie Zdrój ul. Leśna 4",
+    "needsReview": false
+  },
+  {
+    "id": "word-70",
+    "name": "Hotel „SZAFRAN’",
+    "city": "Czeladź",
+    "street": "Będzińska 82",
+    "source": "Hotel „SZAFRAN’ Czeladź ul. Będzińska 82",
+    "needsReview": false
+  },
+  {
+    "id": "word-71",
+    "name": "PARK HOTEL DIAMENT",
+    "city": "Katowice",
+    "street": "Wita Stwosza",
+    "source": "PARK HOTEL DIAMENT w Katowicach ul. Wita Stwosza",
+    "needsReview": false
+  },
+  {
+    "id": "word-72",
+    "name": "ING Bank Śląski S.A. Oddział w Gliwicach",
+    "city": "Gliwice",
+    "street": "Zwycięstwa",
+    "source": "ING Bank Śląski S.A. Oddział w Gliwicach ul. Zwycięstwa",
+    "needsReview": false
+  },
+  {
+    "id": "word-73",
+    "name": "ING Bank Śląski S.A.",
+    "city": "Katowice",
+    "street": "Owsiana 66",
+    "source": "ING Bank Śląski S.A. Katowice ul. Owsiana 66",
+    "needsReview": false
+  },
+  {
+    "id": "word-74",
+    "name": "ING Bank Śląski S.A. Oddział",
+    "city": "Katowice",
+    "street": "Mickiewicza",
+    "source": "ING Bank Śląski S.A. Oddział w Katowicach ul. Mickiewicza",
+    "needsReview": false
+  },
+  {
+    "id": "word-75",
+    "name": "INSTANTA Hala magazynowa",
+    "city": "Żory",
+    "street": "Przemysłowa 10",
+    "source": "INSTANTA Hala magazynowa Żory ul. Przemysłowa 10",
+    "needsReview": false
+  },
+  {
+    "id": "word-76",
+    "name": "Kasyno gry",
+    "city": "Katowice",
+    "street": "Roździeńskiego 16",
+    "source": "Kasyno gry Katowice ul. Roździeńskiego 16",
+    "needsReview": false
+  },
+  {
+    "id": "word-77",
+    "name": "SALTANA SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ",
+    "city": "",
+    "street": "",
+    "source": "SALTANA SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ",
+    "needsReview": true
+  },
+  {
+    "id": "word-78",
+    "name": "Maciej Jaglarz",
+    "city": "Katowice",
+    "street": "Aleja Wojciecha Korfantego 2",
+    "source": "Maciej Jaglarz , Katowice Aleja Wojciecha Korfantego 2",
+    "needsReview": false
+  },
+  {
+    "id": "word-79",
+    "name": "Maciej Jaglarz-Dom Handlowy „Ślązak”",
+    "city": "Katowice",
+    "street": "Mickiewicza 7",
+    "source": "Maciej Jaglarz-Dom Handlowy „Ślązak” ul. Mickiewicza 7 Katowice",
+    "needsReview": false
+  },
+  {
+    "id": "word-80",
+    "name": "Miejski Ośrodek Sportu i Rekreacji , Sosnowiec „Stadion Zimowy”",
+    "city": "Sosnowiec",
+    "street": "Zamkowa",
+    "source": "Miejski Ośrodek Sportu i Rekreacji , Sosnowiec „Stadion Zimowy” ul. Zamkowa",
+    "needsReview": false
+  },
+  {
+    "id": "word-81",
+    "name": "Miejski Ośrodek Sportu i Rekreacji w Żorach – Ośrodek Rekreacyjno-Wypoczynkowy",
+    "city": "Żory",
+    "street": "",
+    "source": "Miejski Ośrodek Sportu i Rekreacji w Żorach ul. Wolności 36 ( Ośrodek Rekreacyjno – Wypoczynkowy ul. Kłocińska 78a ŻORY )",
+    "needsReview": true
+  },
+  {
+    "id": "word-82",
+    "name": "Muzeum Śląskie",
+    "city": "Katowice",
+    "street": "Aleja W. Korfantego 3",
+    "source": "Muzeum Śląskie w Katowicach Aleja W. Korfantego 3",
+    "needsReview": false
+  },
+  {
+    "id": "word-83",
+    "name": "Politechnika Śląska - Wydział Automatyki i Elektroniki",
+    "city": "Gliwice",
+    "street": "Akademicka 16",
+    "source": "Politechnika Śląska - Wydział Automatyki i Elektroniki Gliwice ul. Akademicka 16",
+    "needsReview": false
+  },
+  {
+    "id": "word-84",
+    "name": "Kościół Rzymskokatolicki pw. Ścięcia św. Jana Chrzciciela",
+    "city": "Grzawa",
+    "street": "Kościelna 2",
+    "source": "Kościół Rzymskokatolicki Pw. Ścięcia św. Jana Chrzciciela Ul. Kościelna 2 Grzawa",
+    "needsReview": false
+  },
+  {
+    "id": "word-85",
+    "name": "Rzymskokatolicka Parafia św. Barbary",
+    "city": "Góra",
+    "street": "Topolowa 37",
+    "source": "Rzymsko-katolicka Parafia Św. Barbary Góra , ul.Topolowa 37( Miedźna k/Pszczyny)",
+    "needsReview": false
+  },
+  {
+    "id": "word-86",
+    "name": "Rzymskokatolicka Parafia św. Klemensa I P. i M.",
+    "city": "Miedźna",
+    "street": "Wiejska 47",
+    "source": "Rzymsko-katolicka Parafia Św. Klemensa I P. i M. Miedźna ul Wiejska 47",
+    "needsReview": false
+  },
+  {
+    "id": "word-87",
+    "name": "Kamienica przy ul. 3 Maja 9",
+    "city": "Katowice",
+    "street": "3 Maja 9",
+    "source": "Kamienica przy ul. 3 Maja 9 Katowice ul. 3 Maja 9",
+    "needsReview": false
+  },
+  {
+    "id": "word-88",
+    "name": "SP Szpital Kliniczny nr 1 im. Prof. Szyszko",
+    "city": "Zabrze",
+    "street": "3 Maja 13–15",
+    "source": "SP Szpital Kliniczny nr 1 im Prof. Szyszko ul/.3 Maja 13-15 ZABRZE",
+    "needsReview": false
+  },
+  {
+    "id": "word-89",
+    "name": "SP Zakład Opieki Zdrowotnej – Szpital Rejonowy",
+    "city": "Zabrze",
+    "street": "Zamkowa 4",
+    "source": "SP Zakład Opieki Zdrowotnej – Szpital Rejonowy ul. Zamkowa 4 ZABRZE",
+    "needsReview": false
+  },
+  {
+    "id": "word-91",
+    "name": "Samodzielny Publiczny Szpital Kliniczny nr 6 – Górnośląskie Centrum Zdrowia Dziecka im. Jana Pawła II",
+    "city": "Katowice",
+    "street": "Medyków 16",
+    "source": "Samodzielny Publiczny Szpital Kliniczny nr 6 Górnośląskie Centrum Zdrowia Dziecka im. Jana Pawła II Katowice ul. Medyków 16",
+    "needsReview": false
+  },
+  {
+    "id": "word-94",
+    "name": "Samodzielny Publiczny Szpital Kliniczny nr 5",
+    "city": "Katowice",
+    "street": "Ceglana 35",
+    "source": "Samodzielny Publiczny Szpital Kliniczny nr 5 Katowice ul. Ceglana 35",
+    "needsReview": false
+  },
+  {
+    "id": "word-95",
+    "name": "Śląski Rynek Hurtowy OBROKI Sp. z o.o.",
+    "city": "Katowice",
+    "street": "Obroki 130",
+    "source": "Śląski Rynek Hurtowy OBROKI Sp. z o.o. Katowice ul. Obroki 130",
+    "needsReview": false
+  },
+  {
+    "id": "word-96",
+    "name": "Śląski Urząd Wojewódzki",
+    "city": "Katowice",
+    "street": "Jagiellońska 25",
+    "source": "Śląski Urząd Wojewódzki w Katowicach ul. Jagiellońska 25",
+    "needsReview": false
+  },
+  {
+    "id": "word-97",
+    "name": "Śląski Urząd Wojewódzki w Katowicach – Biurowiec przy ul. Powstańców 41a",
+    "city": "Katowice",
+    "street": "Powstańców 41a",
+    "source": "Śląski Urząd Wojewódzki w Katowicach Biurowiec przy ul. Powstańców 41a",
+    "needsReview": false
+  },
+  {
+    "id": "word-98",
+    "name": "II Urząd Skarbowy",
+    "city": "Katowice",
+    "street": "Paderewskiego 32B",
+    "source": "II Urząd Skarbowy Katowice ul. Paderewskiego 32B",
+    "needsReview": false
+  },
+  {
+    "id": "word-99",
+    "name": "Teatr Śląski im. St. Wyspiańskiego",
+    "city": "Katowice",
+    "street": "Rynek 2",
+    "source": "Teatr Śląski im. St. Wyspiańskiego Katowice ul. Rynek 2",
+    "needsReview": false
+  },
+  {
+    "id": "word-100",
+    "name": "Tyskie Hale Targowe ‘Śródmieście”",
+    "city": "Tychy",
+    "street": "Piłsudzkiego 8",
+    "source": "Tyskie Hale Targowe ‘Śródmieście” Tychy ul. Piłsudzkiego 8",
+    "needsReview": false
+  },
+  {
+    "id": "word-101",
+    "name": "Wojewódzki Szpital Specjalistyczny nr 4",
+    "city": "Bytom",
+    "street": "Al. Legionów 10",
+    "source": "Wojewódzki Szpital Specjalistyczny nr 4 Bytom Al. Legionów 10",
+    "needsReview": false
+  },
+  {
+    "id": "word-102",
+    "name": "Wydział Automatyki i Elektroniki",
+    "city": "Gliwice",
+    "street": "Akademicka 16",
+    "source": "Wydział Automatyki i Elektroniki Gliwice ul. Akademicka 16",
+    "needsReview": false
+  },
+  {
+    "id": "word-103",
+    "name": "Zajazd „Dyliżans Pocztowy”",
+    "city": "Katowice",
+    "street": "Rolna",
+    "source": "Zajazd „Dyliżans Pocztowy” ul. Rolna KATOWICE",
+    "needsReview": false
+  },
+  {
+    "id": "word-104",
+    "name": "Zakład Opiekuńczy Kongr. Sióstr Miłosierdzia ul. Zg.Starego 19",
+    "city": "Gliwice",
+    "street": "Zg.Starego 19",
+    "source": "Zakład Opiekuńczy Kongr. Sióstr Miłosierdzia Gliwice ul. Zg.Starego 19",
+    "needsReview": false
+  },
+  {
+    "id": "word-105",
+    "name": "Zespół Opieki Zdrowotnej w Świętochłowicach",
+    "city": "Świętochłowice",
+    "street": "Chorzowska 38",
+    "source": "Zespół Opieki Zdrowotnej w Świętochłowicach ul. Chorzowska 38 Świętochłowice",
+    "needsReview": false
+  },
+  {
+    "id": "word-106",
+    "name": "Z.U.S. Tarnowskie Góry",
+    "city": "Tarnowskie Góry",
+    "street": "Górnicza 4-8",
+    "source": "Z.U.S. Tarnowskie Góry ul. Górnicza 4-8",
+    "needsReview": false
+  },
+  {
+    "id": "word-107",
+    "name": "ZZOZ w Cieszynie – Szpital Śląski",
+    "city": "Cieszyn",
+    "street": "Bielska 4",
+    "source": "ZZOZ w Cieszynie – Szpital Śląski Cieszyn ul. Bielska 4",
+    "needsReview": false
+  },
+  {
+    "id": "word-108",
+    "name": "Sąd Okręgowy",
+    "city": "Katowice",
+    "street": "Andrzeja 16-18",
+    "source": "Sąd Okręgowy w Katowicach ul.Andrzeja 16-18",
+    "needsReview": false
+  },
+  {
+    "id": "word-109",
+    "name": "Dom Seniora Zielony Zakątek",
+    "city": "Mysłowice",
+    "street": "Plebiscytowa 88D",
+    "source": "Dom Seniora Zielony Zakątek ul. Plebiscytowa 88D 41-409, Mysłowice",
+    "needsReview": false
+  }
+]

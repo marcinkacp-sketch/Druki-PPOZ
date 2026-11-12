@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#122644">
+<title>Druki PPOŻ — czasowe odłączenie</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png" type="image/png">
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:#17243a;background:#edf2f8;font-synthesis:none}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.header{background:linear-gradient(112deg,#102440,#203e69);padding:22px clamp(16px,5vw,46px);color:white;display:flex;align-items:center;gap:14px;justify-content:space-between}
+.brand{display:flex;gap:13px;align-items:center}.logo{width:45px;height:45px;display:grid;place-items:center;font-size:23px;background:#ffffff24;border:1px solid #ffffff30;border-radius:14px}
+.header h1{margin:0 0 2px;font-size:clamp(20px,2.4vw,27px);letter-spacing:-.4px}.header p{font-size:12px;opacity:.85;margin:0}.offline{font-size:12px;padding:7px 10px;background:#1f8d6d;color:white;border-radius:25px;white-space:nowrap}
+.layout{display:grid;grid-template-columns:minmax(300px,540px) minmax(440px,1fr);align-items:start;gap:22px;max-width:1460px;margin:auto;padding:23px 24px 55px}
+.panels{display:grid;gap:16px}.panel{background:#fff;box-shadow:0 3px 19px #0e244014;border-radius:16px;padding:20px;border:1px solid #e5ebf4}
+.panel-head{display:flex;align-items:center;gap:9px;margin-bottom:15px}.index{width:29px;height:29px;background:#e7effb;border-radius:10px;display:grid;place-items:center;color:#244d82;font-size:13px;font-weight:800}
+.panel h2{font-size:16px;margin:0;letter-spacing:-.2px}.help{color:#64748b;font-size:12px;line-height:1.55;margin:6px 0 12px}
+label{font-size:12px;font-weight:720;color:#334155;display:block;margin:0 0 5px}.field{min-width:0;margin-bottom:12px}input,select,textarea{width:100%;border-radius:10px;border:1px solid #ced8e6;background:#fff;padding:11px 12px;color:#142338;outline:0;min-width:0}input:focus,textarea:focus,select:focus{border-color:#3264b6;box-shadow:0 0 0 3px #3264b61c}input[type=date],input[type=time]{font-size:15px}
+textarea{resize:vertical;min-height:60px}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}.search-list{max-height:255px;overflow:auto;background:#fff;border:1px solid #d8e3ef;border-radius:11px;margin-top:5px}.object-item{width:100%;border:0;background:#fff;display:block;text-align:left;padding:11px 12px;border-bottom:1px solid #edf1f5;font-size:13px;line-height:1.3}.object-item:last-child{border:0}.object-item:hover,.object-item:focus{background:#f0f6ff}.object-item strong{display:block;font-size:13px}.object-item small{display:block;color:#5d728c;margin-top:3px}.object-item.active{background:#e7f1fe;border-left:4px solid #2a5ea7}.smallbtn{padding:8px 10px;border:1px solid #cbd8ea;background:#f5f9fe;color:#1e497e;border-radius:9px;font-weight:700;font-size:12px}.actions-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.notice{background:#f2f7ff;color:#36577f;border:1px solid #d8e9fd;border-radius:10px;padding:10px;font-size:12px;line-height:1.55}.warning{background:#fff6e7;color:#8a5116;border-color:#f4ddb5}.ok{background:#e5f6ed;color:#176344;border-color:#b7e4cb}
+.chip{display:inline-block;font-size:11px;font-weight:750;color:#315b92;background:#e7effb;border-radius:8px;padding:5px 8px}
+.action-panel{position:sticky;bottom:12px;background:#fff;z-index:2}.action-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:10px;padding:13px 9px;font-size:13px;font-weight:790}.btn-primary{color:white;background:#2157a3}.btn-secondary{color:#1f477d;background:#e4eefb}.btn:disabled{opacity:.5;cursor:wait}.subline{text-align:center;font-size:12px;color:#63758e;margin:10px 0 0}
+.preview-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px}.preview-head h2{margin:0;font-size:16px}.preview{position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto}.paper{width:min(100%,794px);aspect-ratio:210/297;min-height:900px;margin:auto;background:white;box-shadow:0 9px 35px #263a5940;padding:6.9% 7.5%;color:#0d1018;font-family:Arial,Helvetica,sans-serif;font-size:clamp(9px,1.23vw,12px);line-height:1.36}.paper .right{text-align:right}.paper .letterhead{font-size:1.07em;line-height:1.18;font-weight:750;margin-bottom:22px}.paper h3{text-align:center;font-size:1.23em;line-height:1.25;margin:0 0 24px}.paper p{margin:0 0 12px}.paper .formline{margin-bottom:3px}.paper .hint{text-align:center;color:#777;font-size:.7em;font-style:italic;margin-bottom:13px}.paper .value{font-weight:750;overflow-wrap:anywhere}.paper .center{text-align:center}.paper .paragraph{text-align:justify}.paper .info{color:#2154a7;font-weight:750}.paper .contacts{margin-top:22px}.paper .contacts-line{display:flex;gap:18px;margin:5px 0}.paper .contacts-line .contact-name{min-width:48%;overflow-wrap:anywhere}.paper .signature{margin-top:35px;text-align:right;font-size:.97em}.paper .signature .rule{display:inline-block;border-bottom:1px dotted #444;min-width:170px;margin-bottom:5px}.paper .signer{text-align:right}.paper .date-line{margin:20px 0 17px}
+.footer{text-align:center;color:#718197;font-size:12px;padding:15px}
+@media(max-width:1050px){.layout{grid-template-columns:1fr;max-width:720px;padding:16px}.preview{position:static;max-height:none}.action-panel{position:static;bottom:auto}.paper{font-size:12px;width:100%;aspect-ratio:auto;min-height:0}.panels{gap:12px}}
+@media(max-width:520px){.header{padding:17px 16px}.header h1{font-size:19px}.offline{font-size:10px;padding:6px}.panel{padding:16px}.layout{padding:12px}.paper{padding:6.5% 6.7%;font-size:9.3px;min-height:0;aspect-ratio:auto}.paper .letterhead{margin-bottom:12px}.paper h3{margin-bottom:12px}.paper p{margin-bottom:8px}.paper .contacts{margin-top:10px}.paper .signature{margin-top:20px}.paper .date-line{margin:11px 0}.twocol{gap:8px}.btn{font-size:12px;padding:12px 5px}}
+@page{size:A4;margin:15mm 16mm}
+@media print{
+ html,body{background:#fff!important;margin:0!important;padding:0!important}
+ .header,.panels,.preview-head,.footer{display:none!important}
+ .layout{display:block!important;max-width:none!important;margin:0!important;padding:0!important}
+ .document-preview,.preview{display:block!important;overflow:visible!important;max-height:none!important;margin:0!important;padding:0!important}
+ #paper{position:static!important;width:100%!important;max-width:none!important;aspect-ratio:auto!important;min-height:0!important;margin:0!important;padding:0!important;box-shadow:none!important;border:0!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.5pt!important;color:#000!important;line-height:1.35!important}
+ #paper .letterhead{margin-bottom:17pt}#paper h3{margin-bottom:20pt}
+ #paper .hint{margin-bottom:12pt}#paper .contacts{margin-top:20pt}
+ #paper .signature{margin-top:30pt}
+}
+
+</style>
+</head>
+<body>
+<header class="header no-print"><div class="brand"><div class="logo">🔥</div><div><h1>Druki PPOŻ</h1><p>Czasowe odłączenie od monitoringu pożarowego</p></div></div><span class="offline">● Offline</span></header>
+<main class="layout">
+ <div class="panels no-print">
+  <section class="panel"><div class="panel-head"><span class="index">1</span><h2>Wybierz obiekt</h2><span class="chip" id="count-label">73 w bazie</span></div>
+   <div class="field"><label for="search">Szukaj po nazwie, miejscowości lub ulicy</label><input id="search" type="search" placeholder="Np. Gliwice, PIAST, Dom Opieki" autocomplete="off"></div>
+   <div id="search-list" class="search-list" aria-label="Wyniki wyszukiwania"></div>
+   <p class="help" id="source-info">Obiekty wczytane z Twojego dokumentu Word.</p>
+   <div class="actions-row"><button type="button" class="smallbtn" id="new-site">+ Dodaj nowy obiekt</button><button type="button" class="smallbtn" id="save-site">Zapisz dane obiektu</button></div>
+  </section>
+  <section class="panel"><div class="panel-head"><span class="index">2</span><h2>Dane obiektu i prac</h2></div>
+   <div class="field"><label for="siteName">Nazwa obiektu *</label><textarea id="siteName" rows="2" required></textarea></div>
+   <div class="twocol"><div class="field"><label for="street">Ulica i numer *</label><input id="street" required></div><div class="field"><label for="city">Miejscowość *</label><input id="city" required></div></div>
+   <div class="twocol"><div class="field"><label for="pspCity">Miejscowość PSP *</label><input id="pspCity" required></div><div class="field"><label for="works">Rodzaj prac *</label><input id="works" placeholder="konserwacyjnymi" required></div></div>
+   <div id="data-warning" class="notice">Przed wygenerowaniem sprawdź nazwę, adres oraz właściwą miejscowość PSP.</div>
+  </section>
+  <section class="panel"><div class="panel-head"><span class="index">3</span><h2>Termin odłączenia</h2></div>
+   <div class="twocol"><div class="field"><label for="startDate">Od dnia *</label><input id="startDate" type="date"></div><div class="field"><label for="startTime">Godzina od *</label><input id="startTime" type="time" step="300"></div></div>
+   <div class="twocol"><div class="field"><label for="endDate">Do dnia *</label><input id="endDate" type="date"></div><div class="field"><label for="endTime">Godzina do *</label><input id="endTime" type="time" step="300"></div></div>
+   <p class="help">Obie daty ustawiają się automatycznie na dzisiaj. Godziny rozpoczęcia i zakończenia wybierasz samodzielnie w polach powyżej.</p>
+  </section>
+  <section class="panel"><div class="panel-head"><span class="index">4</span><h2>Kontakt i podpis</h2></div>
+   <div class="field"><label for="contactPreset">Osoba kontaktowa</label><select id="contactPreset"></select></div>
+   <div class="twocol"><div class="field"><label for="contactName">Imię i nazwisko *</label><input id="contactName"></div><div class="field"><label for="contactPhone">Telefon *</label><input id="contactPhone" inputmode="tel"></div></div>
+   <div class="field"><label for="signer">Imię i nazwisko osoby podpisującej</label><input id="signer"></div>
+   <p class="help">Stały numer B.U.S. :ATOMSERVICE pozostaje w druku. Podpis / pieczęć należy uzupełnić zgodnie z zasadami firmy.</p>
+  </section>
+  <section class="panel action-panel"><div class="action-buttons"><button id="downloadWord" class="btn btn-primary" type="button">↓ Pobierz Word (.docx)</button><button id="printPdf" class="btn btn-secondary" type="button">▣ Zapisz jako PDF</button></div><p id="message" role="status" class="subline">Druk powstaje na telefonie. Sam dokument nie odłącza monitoringu — zgłoś prace operatorowi.</p><div class="actions-row" style="justify-content:center"><button id="export-data" type="button" class="smallbtn">Kopia bazy (JSON)</button><button id="import-btn" type="button" class="smallbtn">Wczytaj kopię bazy</button><input id="import-file" type="file" accept=".json,application/json" hidden></div></section>
+ </div>
+ <section class="document-preview"><div class="preview-head no-print"><h2>Podgląd gotowego druku</h2><span class="chip">A4 · 1 strona</span></div>
+  <div class="preview"><article id="paper" class="paper">
+   <div class="right letterhead">Centrum Monitorowania<br>Operatora Systemu<br>NOMA 2<br>fax /32/ 256 14 39<br>tel. /32/ 205 25 89, 256 18 24</div>
+   <h3>CZASOWE ODŁĄCZENIE OBIEKTU<br>OD MONITORINGU POŻAROWEGO</h3>
+   <p class="formline">W związku z prowadzonymi pracami &nbsp; <span class="value" data-out="works"></span></p><p class="hint">(określić charakter prac)</p>
+   <p class="formline">w obiekcie &nbsp; <span class="value" data-out="siteName"></span></p><p class="hint">(nazwa obiektu)</p>
+   <p class="formline">przy ulicy &nbsp; <span class="value" data-out="street"></span> &nbsp;&nbsp; w &nbsp; <span class="value" data-out="city"></span></p><p class="hint">(nazwa ulicy) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (nazwa miasta)</p>
+   <p class="paragraph">prosimy o czasowe odłączenie go od systemu monitoringu pożarowego w Centrum Odbiorczym Alarmów Pożarowych Komendy Miejskiej / Komendy Powiatowej Państwowej Straży Pożarnej w:</p>
+   <p class="center value" data-out="pspCity"></p><p class="hint">(nazwa miasta)</p>
+   <p class="date-line">od dnia &nbsp; <span class="value" data-out="startDateFmt"></span> r. godz. <span class="value" data-out="startTimeFmt"></span> &nbsp;&nbsp; do dnia &nbsp; <span class="value" data-out="endDateFmt"></span> r. godz. <span class="value" data-out="endTimeFmt"></span></p>
+   <p>w celu zapobieżenia wyjazdom wozów straży pożarnej do fałszywych alarmów.</p>
+   <p class="paragraph info">Jednocześnie zobowiązujemy się do telefonicznego informowania Centrum Monitorowania Operatora Systemu NOMA 2 w momencie rozpoczęcia i zakończenia prac.</p>
+   <p class="paragraph">Przyjmujemy do wiadomości, że w przypadku rzeczywistego pożaru zachowany zostaje obowiązek powiadamiania najbliższej jednostki Straży Pożarnej (tel. 998 lub inne środki łączności) – wg zasad obowiązujących dla obiektów monitorowanych art.4.1 pkt 5 i 7 Ustawy z dn. 24 sierpnia 1991r. o ochronie przeciwpożarowej.</p>
+   <div class="contacts"><p>Osoby kontaktowe na wypadek alarmu:</p><div class="contacts-line"><span class="contact-name">1. &nbsp; B.U.S. :ATOMSERVICE</span><span>32 253 94 72</span></div><div class="contacts-line"><span class="contact-name">2. &nbsp; <span data-out="contactName"></span></span><span data-out="contactPhone"></span></div></div>
+   <div class="signature"><div class="rule"></div><div class="signer" data-out="signer"></div></div>
+  </article></div>
+ </section>
+</main><footer class="footer no-print">Wersja lokalna · Dane obiektów mogą wymagać weryfikacji · Bez połączenia z serwerem</footer>
+<script>/*ZIP_JS*/</script>
+<script>
+const INCLUDED_OBJECTS = /*OBJECTS_JSON*/;
+const CONTACTS = [
+ {name:'Marcin Kacperski',phone:'782 755 700'},
+ {name:'Wojciech Boratyn',phone:'602 155 819'},
+ {name:'Grzegorz Wojtas',phone:'883 735 318'},
+ {name:'Andrzej Sławecki',phone:'792 584 750'},
+ {name:'Dariusz Gałecki',phone:'509 400 693'},
+ {name:'Wojtas Łukasz',phone:'723917147'}
+];
+const TEMPLATE_BASE64 = '/*TEMPLATE_B64*/';
+const STORAGE_KEY = 'druki-ppoz-local-v1';
+const $ = id => document.getElementById(id);
+let settings = {overrides:{},custom:[],selected:'word-104'};
+try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(saved&&typeof saved==='object')settings={...settings,...saved};}catch(e){}
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(settings));}catch(e){setMessage('Przeglądarka blokuje zapamiętywanie. Wyeksportuj kopię bazy.');}}
+function allObjects(){return [...INCLUDED_OBJECTS.map(o=>({...o,...(settings.overrides||{})[o.id]})),...(settings.custom||[])];}
+const normalize = text => (text||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ł/g,'l');
+function showResults(){
+ const query=normalize($('search').value.trim());const all=allObjects();const filtered=(query?all.filter(x=>normalize([x.name,x.city,x.street,x.source].join(' ')).includes(query)):all).slice(0,10);
+ $('search-list').replaceChildren();
+ if(!filtered.length){const p=document.createElement('p');p.className='help';p.style.padding='0 12px';p.textContent='Brak wyników. Możesz dodać nowy obiekt.';$('search-list').appendChild(p);}
+ filtered.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='object-item'+(settings.selected===o.id?' active':'');const strong=document.createElement('strong');strong.textContent=o.name;const small=document.createElement('small');small.textContent=[o.city,o.street].filter(Boolean).join(' · ')||(o.needsReview?'Dane adresowe do uzupełnienia':'');b.append(strong,small);b.addEventListener('click',()=>choose(o.id));$('search-list').appendChild(b);});
+ $('count-label').textContent=all.length+' w bazie';
+}
+function choose(id){const obj=allObjects().find(x=>x.id===id);if(!obj)return;settings.selected=id;persist();$('siteName').value=obj.name||'';$('street').value=obj.street||'';$('city').value=obj.city||'';$('pspCity').value=obj.city||'';$('source-info').textContent=obj.source?'Źródło: lista obiektów w przesłanym Wordzie.':'Obiekt dodany lokalnie.';$('data-warning').className='notice'+(obj.needsReview?' warning':'');$('data-warning').textContent=obj.needsReview?'Uwaga: w źródłowym Wordzie adres jest niepełny, wieloznaczny lub wymaga sprawdzenia. Zweryfikuj wszystkie pola.':'Sprawdź przed wysłaniem: aktualność adresu oraz właściwą miejscowość PSP.';showResults();refreshPreview();}
+function getFields(){return Object.fromEntries(['siteName','street','city','pspCity','works','startDate','startTime','endDate','endTime','contactName','contactPhone','signer'].map(id=>[id,$(id).value.trim()]));}
+function prettyDate(date){if(!/^\d{4}-\d\d-\d\d$/.test(date||''))return '…………';const [y,m,d]=date.split('-');return `${d}.${m}.${y}`;}
+function prettyTime(time){return (time||'……').replace(':','.').replace(/^0(?=\d\.)/,'');}
+function refreshPreview(){const d=getFields();const values={...d,startDateFmt:prettyDate(d.startDate),endDateFmt:prettyDate(d.endDate),startTimeFmt:prettyTime(d.startTime),endTimeFmt:prettyTime(d.endTime)};document.querySelectorAll('[data-out]').forEach(el=>el.textContent=values[el.dataset.out]||'……………………');}
+function setMessage(msg,problem=false){$('message').textContent=msg;$('message').style.color=problem?'#ad3427':'#59718c';}
+function validate(){const d=getFields();const required=[['siteName','nazwę obiektu'],['street','ulicę i numer'],['city','miejscowość obiektu'],['pspCity','miejscowość PSP'],['works','rodzaj prac'],['contactName','osobę kontaktową'],['contactPhone','telefon kontaktowy'],['startDate','datę od'],['startTime','godzinę od'],['endDate','datę do'],['endTime','godzinę do']];for(const [key,text] of required){if(!d[key]){setMessage('Uzupełnij: '+text,true);$(key).focus();return null;}}
+ const start=new Date(`${d.startDate}T${d.startTime}:00`), end=new Date(`${d.endDate}T${d.endTime}:00`);
+ if(!Number.isFinite(+start)||!Number.isFinite(+end)||end<=start){setMessage('Koniec odłączenia musi być późniejszy niż początek.',true);$('endTime').focus();return null;}
+ return d;
+}
+function slug(str){return normalize(str).replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,45)||'obiekt';}
+function downloadBlob(blob,filename){const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
+const xmlEscape = val => String(val??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+async function makeWord(){const d=validate();if(!d)return;const btn=$('downloadWord');try{btn.disabled=true;setMessage('Przygotowywanie dokumentu DOCX…');const zip=await JSZip.loadAsync(TEMPLATE_BASE64,{base64:true});let xml=await zip.file('word/document.xml').async('string');const variables={OBJECT:d.siteName,STREET:d.street,CITY:d.city,PSP_CITY:d.pspCity,WORKS:d.works,DATE_FROM:prettyDate(d.startDate),DATE_TO:prettyDate(d.endDate),TIME_FROM:prettyTime(d.startTime),TIME_TO:prettyTime(d.endTime),CONTACT_PERSON:d.contactName,CONTACT_PHONE:d.contactPhone,SIGNER:d.signer||' '};for(const [k,v] of Object.entries(variables)){const placeholder='{{'+k+'}}';if(!xml.includes(placeholder))throw Error('Brak pola '+k);xml=xml.replaceAll(placeholder,xmlEscape(v));}zip.file('word/document.xml',xml);const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});downloadBlob(blob,`Odlaczenie_${slug(d.city)}_${d.startDate}.docx`);setMessage('Zapisano dokument Word. Sprawdź go przed przekazaniem.');}catch(e){setMessage('Nie udało się przygotować DOCX: '+e.message,true);}finally{btn.disabled=false;}}
+function printPdf(){if(!validate())return;setMessage('W oknie drukowania wybierz „Zapisz jako PDF”.');window.print();}
+function saveObject(){const d=getFields();if(!d.siteName){setMessage('Najpierw wpisz nazwę obiektu.',true);return;}const id=settings.selected;const entry={id:id&&allObjects().some(x=>x.id===id)?id:'local-'+Date.now(),name:d.siteName,city:d.city,street:d.street,source:'',needsReview:!(d.city&&d.street)};
+ if(id&&INCLUDED_OBJECTS.some(x=>x.id===id))settings.overrides[id]=entry;
+ else{const pos=settings.custom.findIndex(x=>x.id===entry.id);if(pos>=0)settings.custom[pos]=entry;else settings.custom.push(entry);}settings.selected=entry.id;persist();showResults();setMessage('Zapisano dane obiektu na tym urządzeniu.');}
+function newObject(){settings.selected=null;$('search').value='';['siteName','street','city','pspCity'].forEach(id=>$(id).value='');$('source-info').textContent='Nowy obiekt — wpisz dane i zapisz.';showResults();refreshPreview();$('siteName').focus();}
+function downloadBackup(){const b=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),overrides:settings.overrides||{},custom:settings.custom||[]},null,2)],{type:'application/json;charset=utf-8'});downloadBlob(b,'druki_ppoz_kopia_bazy.json');setMessage('Zapisano kopię lokalnych zmian i nowych obiektów.');}
+async function importBackup(ev){const file=ev.target.files?.[0];if(!file)return;try{const input=JSON.parse(await file.text());if(input.version!==1||!input.overrides||!Array.isArray(input.custom))throw Error('Nieprawidłowy plik bazy.');if(!confirm('Wczytać kopię i zastąpić własne zapisane zmiany obiektów?'))return;settings.overrides=input.overrides;settings.custom=input.custom;persist();showResults();choose('word-104');setMessage('Wczytano kopię bazy.');}catch(e){setMessage('Nie udało się wczytać bazy: '+e.message,true);}finally{ev.target.value='';}}
+function localDateString(date){return [date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');}
+function init(){const now=new Date();
+ $('startDate').value=localDateString(now);$('endDate').value=localDateString(now);$('startTime').value='';$('endTime').value='';$('works').value='konserwacyjnymi';$('signer').value='Kacperski Marcin';
+ const presets=$('contactPreset');CONTACTS.forEach((x,i)=>{const opt=document.createElement('option');opt.value=String(i);opt.textContent=x.name+' · '+x.phone;presets.appendChild(opt)});const extra=document.createElement('option');extra.value='other';extra.textContent='Inna osoba (wpisz ręcznie)';presets.appendChild(extra);
+ function applyContact(){const chosen=CONTACTS[Number(presets.value)];if(chosen){$('contactName').value=chosen.name;$('contactPhone').value=chosen.phone;}refreshPreview();}presets.addEventListener('change',applyContact);applyContact();
+ document.querySelectorAll('input,textarea,select').forEach(el=>{if(el.id!=='search')el.addEventListener('input',refreshPreview)});
+ $('search').addEventListener('input',showResults);$('new-site').addEventListener('click',newObject);$('save-site').addEventListener('click',saveObject);$('downloadWord').addEventListener('click',makeWord);$('printPdf').addEventListener('click',printPdf);$('export-data').addEventListener('click',downloadBackup);$('import-btn').addEventListener('click',()=>$('import-file').click());$('import-file').addEventListener('change',importBackup);
+ choose(allObjects().some(x=>x.id===settings.selected)?settings.selected:'word-104');
+ // Funkcje testowe do automatycznej weryfikacji z użyciem przeglądarki, bez sieci.
+ window.__drukiTest={allObjects,getFields,prettyDate,prettyTime,validate,makeWord};
+}
+init();
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+ navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+}
+</script>
+</body></html>
