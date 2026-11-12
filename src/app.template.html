@@ -46,7 +46,13 @@ textarea{resize:vertical;min-height:60px}.twocol{display:grid;grid-template-colu
 .noma-base{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:fill}
 .noma-field{position:absolute;display:block;overflow:hidden;white-space:nowrap;line-height:1.05;font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:2.35cqw;color:#000;text-align:left}
 .noma-field.small{font-family:'Arial Narrow','Liberation Sans Narrow','Roboto Condensed',sans-serif-condensed,Arial,sans-serif;font-size:2.03cqw;font-weight:700;line-height:1.1}
-.noma-field.datetime-time{font-size:1.85cqw}
+/* Daty i godziny jako jedna typograficznie spójna linia. Białe tło zasłania
+   WYŁĄCZNIE nadrukowaną linię dat na niezmienionej grafice NOMA 2. */
+.noma-datetime-row{position:absolute;left:7%;top:42.60%;width:79%;height:2.50%;background:#fff;display:flex;align-items:center;gap:.7cqw;overflow:hidden;white-space:nowrap;z-index:1}
+.noma-datetime-row .noma-field{position:static;display:inline-block;width:auto;height:auto;flex:0 0 auto;overflow:visible;white-space:nowrap;font-family:Arial,Helvetica,sans-serif;font-size:1.94cqw;line-height:1.08;color:#000}
+.noma-datetime-row .date-label{font-weight:400}
+.noma-datetime-row .date-value{font-weight:700}
+.noma-datetime-row .date-second{margin-left:1.1cqw}
 .noma-field.signer{font-size:2.68cqw;font-family:Georgia,'Times New Roman',serif;font-weight:400;text-align:center}
 .noma-field.center{text-align:center}
 .noma-signature{position:absolute;display:none;object-fit:contain;object-position:center;mix-blend-mode:multiply}
@@ -255,10 +261,16 @@ body.home-screen .home-note{background:transparent;border:0;padding:9px 5px 0;ma
    <span class="noma-field" data-out="street" style="left:13.09244%;top:32.34245%;width:44.70588%;height:1.90250%;"></span>
    <span class="noma-field" data-out="cityLocative" style="left:61.88235%;top:32.34245%;width:33.78151%;height:1.90250%;"></span>
    <span class="noma-field center" data-out="pspCityLocative" style="left:2.35294%;top:39.03686%;width:93.27731%;height:1.90250%;"></span>
-   <span class="noma-field small" data-out="startDatePdf" style="left:14.31933%;top:43.03%;width:12.35000%;height:1.68847%;"></span>
-   <span class="noma-field small datetime-time" data-out="startTimePdf" style="left:31.83193%;top:43.03%;width:5.02000%;height:1.68847%;"></span>
-   <span class="noma-field small" data-out="endDatePdf" style="left:44.58824%;top:43.03%;width:12.35000%;height:1.68847%;"></span>
-   <span class="noma-field small datetime-time" data-out="endTimePdf" style="left:63.05000%;top:43.03%;width:5.88235%;height:1.68847%;"></span>
+   <div class="noma-datetime-row" id="noma-datetime-row" aria-label="Czasowe odłączenie: data i godzina początku i końca">
+    <span class="noma-field date-label">od dnia</span>
+    <span class="noma-field date-value" data-out="startDatePdf"></span>
+    <span class="noma-field date-label">godz.</span>
+    <span class="noma-field date-value" data-out="startTimePdf"></span>
+    <span class="noma-field date-label date-second">do dnia</span>
+    <span class="noma-field date-value" data-out="endDatePdf"></span>
+    <span class="noma-field date-label">godz.</span>
+    <span class="noma-field date-value" data-out="endTimePdf"></span>
+   </div>
    <span class="noma-field" data-out="contactName" style="left:10.16807%;top:68.51367%;width:37.64706%;height:2.02140%;"></span>
    <span class="noma-field" data-out="contactPhone" style="left:48.73950%;top:68.51367%;width:22.68908%;height:2.02140%;"></span>
    <span class="noma-field signer" data-out="signer" style="left:64.82353%;top:77.31272%;width:21.51261%;height:2.37812%;"></span>
@@ -282,7 +294,7 @@ body.home-screen .home-note{background:transparent;border:0;padding:9px 5px 0;ma
  </div>
  <p id="mail-not-supported" style="display:none">Otwieranie Thunderbirda z załącznikiem jest dostępne w aplikacji Android. Wersja internetowa nadal generuje PDF offline.</p>
 
-<p>Wersja Android 1.3.3 • Druki PPOŻ • ATOM SERWIS</p></div>
+<p>Wersja Android 1.3.4 • Druki PPOŻ • ATOM SERWIS</p></div>
 </section>
 <section class="app-special no-print" id="special-more">
  <div class="app-special-card"><h3>Więcej możliwości</h3><div class="app-shortcuts"><button type="button" data-go="signatures"><span>✍</span>Osoby i podpisy</button><button type="button" data-go="documents"><span>▧</span>Dokumenty PDF</button><button type="button" data-go="settings"><span>⚙</span>Ustawienia</button><button type="button" data-go="objects"><span>▤</span>Moje obiekty</button></div></div>
@@ -354,7 +366,7 @@ function prettyDate(date){if(!/^\d{4}-\d\d-\d\d$/.test(date||''))return '……�
 function prettyTime(time){return (time||'……').replace(':','.').replace(/^0(?=\d\.)/,'');}
 function refreshPreview(){
  const d=getFields();
- const values={...d,startDatePdf:prettyDate(d.startDate),endDatePdf:prettyDate(d.endDate),startTimePdf:'. '+prettyTime(d.startTime),endTimePdf:prettyTime(d.endTime)};
+ const values={...d,startDatePdf:prettyDate(d.startDate),endDatePdf:prettyDate(d.endDate),startTimePdf:prettyTime(d.startTime),endTimePdf:prettyTime(d.endTime)};
  document.querySelectorAll('[data-out]').forEach(el=>el.textContent=values[el.dataset.out]||'');
  displaySavedSignature();
  requestAnimationFrame(fitAllFields);
@@ -404,6 +416,15 @@ async function makePdfCanvas(){
  ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
  ctx.drawImage(bg,0,0,w,h);
  const paperRect=paper.getBoundingClientRect(),sx=w/paperRect.width,sy=h/paperRect.height;
+ // Ensure the PDF has precisely the same clean datetime strip as the preview.
+ // Keep the original blank form PNG unchanged.
+ const dateRow=paper.querySelector('#noma-datetime-row');
+ if(dateRow){
+  const rect=dateRow.getBoundingClientRect();
+  ctx.save();ctx.fillStyle='#fff';
+  ctx.fillRect((rect.left-paperRect.left)*sx,(rect.top-paperRect.top)*sy,rect.width*sx,rect.height*sy);
+  ctx.restore();
+ }
  for(const field of paper.querySelectorAll('.noma-field')){
   const value=(field.textContent||'').trim();if(!value)continue;
   const rect=field.getBoundingClientRect(),css=getComputedStyle(field);

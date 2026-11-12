@@ -166,3 +166,26 @@ lokalne obiekty i podpisy; nie należy odinstalowywać aplikacji. Nie wysyłamy
   aby tekst nie wchodził na nadruk „do dnia” ani na koniec „godz.”.
 - Oficjalna grafika tła i działające przekazanie PDF do Thunderbirda
   pozostały niezmienione. Jest to aktualizacja podpisana tym samym kluczem.
+
+
+## Android 1.3.4 — finalna korekta dat i godzin
+
+Po nieudanych kosmetycznych korektach odstępów w wersjach 1.3.3 i starszych
+wiersz dat i godzin jest teraz **jedną linią flex** z ośmioma fragmentami:
+„od dnia”, data, „godz.”, godzina, „do dnia”, data, „godz.”, godzina.
+Zapobiega to nakładaniu tekstu i przypadkowym odstępom. Cztery zmienne
+nadal pochodzą wyłącznie z formularza, a pozostałe podpisy, nazwy i adresy
+nie zmieniły się. Oryginalny plik PNG formularza NOMA 2 jest nietknięty.
+
+Przy podglądzie i generowaniu PDF stary nadruk w obszarze pojedynczego
+wiersza (bez naruszenia innych elementów drukowanego formularza) jest
+zasłaniany białą maską i odtwarzany z poprawnymi odstępami. Zastosowano
+te same wymiary/układ CSS i współrzędne w canvas PDF. Testy wykonano na
+szerokości podglądu A4 (595px) i na telefonie (330px); wynik jest identyczny
+w pełnej rozdzielczości oryginalnego obrazu.
+
+Testy regresyjne pilnują dokładnie czterech danych, jednego wiersza,
+stałego układu, braków duplikowanych napisów i działającej ścieżki
+przekazywania PDF do Thunderbirda. Aktualizacja APK jest podpisywana
+istniejącym stałym kluczem przez GitHub Actions; użytkownik instaluje
+bez odinstalowania poprzedniej wersji.
