@@ -36,9 +36,21 @@ final class SmtpSender {
         UnknownDelivery() {super("Nie można potwierdzić przyjęcia wiadomości przez SMTP. Nie ponawiaj automatycznie wysyłki.");}
     }
 
-    static void testLogin(String password) throws IOException {
+    static String testLogin(String password) throws IOException {
         try (Session s = connect(password)) {
-            s.command("QUIT", 221);
+            try { s.command("QUIT", 221); } catch (IOException ignored) {}
+            return s.authMethod;
+        }
+    }
+
+    /** Safe diagnostic: handshake/EHLO only, without credentials or messages. */
+    static String inspectServer() throws IOException {
+        try (Session s = openTls()) {
+            String ehlo = s.ehlo();
+            String methods = supportedMethods(ehlo);
+            try { s.command("QUIT", 221); } catch (IOException ignored) {}
+            return methods.isEmpty() ? "Serwer nie ogłasza AUTH w EHLO." :
+                "Serwer obsługuje: " + methods + ". Wykrywanie nie wymaga hasła.";
         }
     }
 
@@ -107,8 +119,74 @@ final class SmtpSender {
         return format.format(new Date());
     }
 
+    private static boolean advertises(String ehlo, String mechanism) {
+        for (String line : ehlo.split("\n")) {
+            String capability = line.trim().toUpperCase(Locale.ROOT);
+            if (capability.startsWith("AUTH ") || capability.startsWith("AUTH=")) {
+                String list = capability.substring(5).replace('=', ' ').trim();
+                for (String entry : list.split("\\s+")) {
+                    if (mechanism.equals(entry)) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static String supportedMethods(String ehlo) {
+        boolean login=advertises(ehlo, "LOGIN");
+        boolean plain=advertises(ehlo, "PLAIN");
+        return login && plain ? "AUTH LOGIN, AUTH PLAIN" :
+               login ? "AUTH LOGIN" : plain ? "AUTH PLAIN" : "";
+    }
+
+    private static String encode(String text) {
+        return Base64.getEncoder().encodeToString(text.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /** Use exactly one advertised mechanism per connection; do not retry
+     * another mechanism after a 535 response (account lockout risk).
+     */
     private static Session connect(String password) throws IOException {
-        if (password == null || password.isEmpty()) throw new IOException("Brak zapisanego hasła SMTP.");
+        if (password == null || password.isEmpty())
+            throw new IOException("Brak zapisanego hasła SMTP.");
+        Session s = openTls();
+        try {
+            String ehlo = s.ehlo();
+            if (advertises(ehlo, "LOGIN")) {
+                // RFC 4954 AUTH LOGIN: initial challenge, username, password.
+                s.authMethod = "AUTH LOGIN";
+                int code = s.commandAllow("AUTH LOGIN");
+                if (code != 334) throw authFailure(code, s.authMethod);
+                code = s.commandAllow(encode(FROM));
+                if (code != 334) throw authFailure(code, s.authMethod);
+                code = s.commandAllow(encode(password));
+                if (code != 235) throw authFailure(code, s.authMethod);
+            } else if (advertises(ehlo, "PLAIN")) {
+                s.authMethod = "AUTH PLAIN";
+                String payload = "\0" + FROM + "\0" + password;
+                int code = s.commandAllow("AUTH PLAIN " + encode(payload));
+                if (code == 334) code = s.commandAllow(encode(payload));
+                if (code != 235) throw authFailure(code, s.authMethod);
+            } else {
+                throw new IOException("Serwer SMTP nie reklamuje obsługi AUTH LOGIN/PLAIN.");
+            }
+            return s;
+        } catch (IOException ex) {
+            try { s.close(); } catch (IOException ignored) {}
+            throw ex;
+        }
+    }
+
+    private static IOException authFailure(int code, String method) {
+        if (code == 535 || code == 534) {
+            return new IOException("Serwer SMTP odrzucił " + method + " (" + code
+                    + "). Nie ponawiaj prób wielokrotnie. Sprawdź uprawnienia SMTP konta.");
+        }
+        return new IOException("Uwierzytelnianie " + method + " nie powiodło się ("
+                + code + ").");
+    }
+
+    private static Session openTls() throws IOException {
         Socket tcp = new Socket();
         try {
             tcp.connect(new InetSocketAddress(HOST, PORT), TIMEOUT_MS);
@@ -122,22 +200,10 @@ final class SmtpSender {
             Session s = new Session(socket);
             try {
                 s.expect(220);
-                s.command("EHLO atomservice.eu", 250);
-                String payload = "\0" + FROM + "\0" + password;
-                int authResult = s.commandAllow("AUTH PLAIN " + Base64.getEncoder()
-                        .encodeToString(payload.getBytes(StandardCharsets.UTF_8)));
-                if (authResult == 334) {
-                    authResult = s.commandAllow(Base64.getEncoder()
-                            .encodeToString(payload.getBytes(StandardCharsets.UTF_8)));
-                }
-                if (authResult != 235) {
-                    throw new IOException(authResult == 535
-                            ? "Serwer odrzucił login lub hasło SMTP (535)."
-                            : "Uwierzytelnianie SMTP odrzucone (" + authResult + ").");
-                }
                 return s;
             } catch (IOException ex) {
-                s.close(); throw ex;
+                s.close();
+                throw ex;
             }
         } catch (IOException | RuntimeException ex) {
             try { tcp.close(); } catch (IOException ignored) {}
@@ -153,10 +219,16 @@ final class SmtpSender {
         private final SSLSocket socket;
         private final BufferedReader in;
         private final BufferedWriter out;
+        String authMethod = "";
+        private String lastReply = "";
         Session(SSLSocket socket) throws IOException {
             this.socket = socket;
             in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.US_ASCII));
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.US_ASCII));
+        }
+        String ehlo() throws IOException {
+            command("EHLO atomservice.eu", 250);
+            return lastReply;
         }
         int commandAllow(String command) throws IOException {
             write(command + "\r\n");
@@ -181,13 +253,18 @@ final class SmtpSender {
             int code;
             try { code = Integer.parseInt(line.substring(0,3)); }
             catch (NumberFormatException ex) { throw new IOException("Nieprawidłowa odpowiedź SMTP."); }
-            for (int i = 0; line.length() > 3 && line.charAt(3) == '-'; i++) {
-                if (i > 60) throw new IOException("Zbyt długa odpowiedź SMTP.");
+            StringBuilder capabilities = new StringBuilder();
+            int lines = 0;
+            while (true) {
+                if (line.length() < 3 || !line.startsWith(Integer.toString(code))
+                        || line.length() > 800) throw new IOException("Niespójna odpowiedź SMTP.");
+                if (line.length() > 4) capabilities.append(line.substring(4)).append('\n');
+                if (line.length() == 3 || line.charAt(3) != '-') break;
+                if (++lines > 60) throw new IOException("Zbyt długa odpowiedź SMTP.");
                 line = in.readLine();
                 if (line == null) throw new IOException("Przerwana odpowiedź SMTP.");
-                if (line.length() < 3 || !line.startsWith(Integer.toString(code)))
-                    throw new IOException("Niespójna odpowiedź SMTP.");
             }
+            lastReply = capabilities.toString();
             return code;
         }
         void write(String value) throws IOException { out.write(value); out.flush(); }

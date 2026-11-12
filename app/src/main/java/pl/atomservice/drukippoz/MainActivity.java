@@ -167,12 +167,23 @@ public final class MainActivity extends Activity {
             } catch (Exception ignored) { return false; }
         }
 
+        @JavascriptInterface public void inspectServer(String requestId) {
+            mailExecutor.execute(() -> {
+                try {
+                    String result = SmtpSender.inspectServer();
+                    notifyMail(requestId, "INSPECT_OK", result);
+                } catch (Exception ex) {
+                    notifyMail(requestId, "INSPECT_FAILED", mailError(ex));
+                }
+            });
+        }
+
         @JavascriptInterface public void testConnection(String requestId) {
             mailExecutor.execute(() -> {
                 try {
                     String password = MailCredentialStore.load(MainActivity.this);
-                    SmtpSender.testLogin(password);
-                    notifyMail(requestId, "TEST_OK", "Logowanie SMTP działa. Nie wysłano żadnej wiadomości.");
+                    String method = SmtpSender.testLogin(password);
+                    notifyMail(requestId, "TEST_OK", "Logowanie SMTP działa (" + method + "). Nie wysłano żadnej wiadomości.");
                 } catch (Exception ex) {
                     notifyMail(requestId, "TEST_FAILED", mailError(ex));
                 }

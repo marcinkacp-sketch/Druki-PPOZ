@@ -13,12 +13,12 @@ class TestDrukiPPOZ(unittest.TestCase):
   for token in ['app-bottom-nav','setupAppTabs','data-screen="home"','data-screen="request"','data-go="objects"','data-part="signatures"','home-recent-list','hero-reference-2.webp','document-history','addDocumentHistory']:
    self.assertIn(token,index)
   gradle=(ROOT/'app/build.gradle.kts').read_text('utf8')
-  self.assertIn('versionCode = 5',gradle)
+  self.assertIn('versionCode = 6',gradle)
   self.assertIn('stableRelease',gradle)
-  self.assertIn('versionName = "1.3.0"',gradle)
+  self.assertIn('versionName = "1.3.1"',gradle)
  def test_native_smtp_ui_is_explicit(self):
   index=(ROOT/'app/src/main/assets/index.html').read_text('utf8')
-  for token in ('id="sendNomaPdf"','id="smtp-password"','id="smtp-test"',
+  for token in ('id="sendNomaPdf"','id="smtp-password"','id="smtp-test"','id="smtp-inspect"',
                 'sma@noma2.pl','mail.atomservice.eu','window.AtomMail.sendPdf',
                 'confirm(confirmText)','window.onNativeMailResult',
                 'Nie zamykaj aplikacji','Status wysyłki'):
@@ -39,7 +39,7 @@ class TestDrukiPPOZ(unittest.TestCase):
   self.assertIn("startTimePdf:'.'+prettyTime(d.startTime)",index)
   self.assertNotIn("startTimePdf:'.\\u00a0'+prettyTime(d.startTime)",index)
   sw=(ROOT/'service-worker.js').read_text('utf8')
-  self.assertIn('druki-ppoz-v8',sw)
+  self.assertIn('druki-ppoz-v9',sw)
  def test_official_template(self):
   f=ROOT/'templates/noma2_blank.png'
   self.assertTrue(f.exists())

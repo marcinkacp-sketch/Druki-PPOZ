@@ -110,3 +110,18 @@ rzeczywiste konto SMTP akceptuje hasło. Test logowania i pierwszą próbę
 wysyłki należy wykonać na urządzeniu właściciela, za jego zgodą. W szczególności
 nie wysyłamy automatycznie prawdziwych zgłoszeń z testów CI. Thunderbird może
 nadal obsługiwać tę skrzynkę niezależnie.
+
+
+## Android 1.3.1 — diagnostyka SMTP 535 (bez hasła)
+
+- Połączenie SMTP na porcie 465 nadal wymaga zweryfikowanego certyfikatu TLS.
+- Nowy przycisk **„Sprawdź metody serwera (bez hasła)”** wykonuje wyłącznie EHLO,
+  ujawnia obsługiwane mechanizmy AUTH i nie próbuje logowania, nie wysyła wiadomości.
+- Klient wybiera **AUTH LOGIN**, jeśli serwer je reklamuje; w przeciwnym razie
+  **AUTH PLAIN**, jeśli jest dostępne. Nie próbuje drugiej metody po błędzie 535,
+  żeby ograniczyć ryzyko blokady konta. Wynik testu logowania podaje użyty mechanizm.
+- Nie oznacza to, że każdy błąd 535 jest błędem aplikacji: może też wynikać z
+  ograniczeń logowania SMTP, oddzielnych danych lub polityki dostawcy.
+- Rzeczywistego logowania do prywatnej skrzynki nie wykonują testy CI.
+- Hasło ujawnione w rozmowie należy zmienić w panelu dostawcy i zaktualizować
+  na wszystkich urządzeniach. Nie udostępniać haseł w czatach ani w repozytorium.
