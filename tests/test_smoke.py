@@ -13,8 +13,24 @@ class TestDrukiPPOZ(unittest.TestCase):
   for token in ['app-bottom-nav','setupAppTabs','data-screen="home"','data-screen="request"','data-go="objects"','data-part="signatures"','home-recent-list','hero-reference-2.webp','document-history','addDocumentHistory']:
    self.assertIn(token,index)
   gradle=(ROOT/'app/build.gradle.kts').read_text('utf8')
-  self.assertIn('versionCode = 3',gradle)
+  self.assertIn('versionCode = 4',gradle)
   self.assertIn('stableRelease',gradle)
+ def test_datetime_typography_and_alignment(self):
+  import re
+  index=(ROOT/'app/src/main/assets/index.html').read_text('utf8')
+  fields=('startDatePdf','startTimePdf','endDatePdf','endTimePdf')
+  positions=[]
+  for field in fields:
+   m=re.search(r'data-out="'+field+r'" style="[^"]*top:([0-9.]+)%;',index)
+   self.assertIsNotNone(m,field)
+   positions.append(m.group(1))
+  self.assertEqual(len(set(positions)),1,positions)
+  self.assertIn('sans-serif-condensed',index)
+  self.assertIn('.noma-field.start-time{font-size:2.03cqw}',index)
+  self.assertIn("startTimePdf:'.'+prettyTime(d.startTime)",index)
+  self.assertNotIn("startTimePdf:'.\\u00a0'+prettyTime(d.startTime)",index)
+  sw=(ROOT/'service-worker.js').read_text('utf8')
+  self.assertIn('druki-ppoz-v7',sw)
  def test_official_template(self):
   f=ROOT/'templates/noma2_blank.png'
   self.assertTrue(f.exists())

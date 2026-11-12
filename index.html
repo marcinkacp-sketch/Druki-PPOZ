@@ -45,8 +45,8 @@ textarea{resize:vertical;min-height:60px}.twocol{display:grid;grid-template-colu
 .noma-paper{position:relative!important;display:block!important;width:100%!important;max-width:595px!important;aspect-ratio:595/841!important;min-height:0!important;margin:auto!important;padding:0!important;overflow:hidden!important;background:white!important;container-type:inline-size;box-shadow:0 9px 35px #263a5940}
 .noma-base{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:fill}
 .noma-field{position:absolute;display:block;overflow:hidden;white-space:nowrap;line-height:1.05;font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:2.35cqw;color:#000;text-align:left}
-.noma-field.small{font-family:Arial,Helvetica,sans-serif;font-size:1.91cqw;font-weight:700;line-height:1.1}
-.noma-field.start-time{font-size:1.72cqw}
+.noma-field.small{font-family:'Arial Narrow','Liberation Sans Narrow','Roboto Condensed',sans-serif-condensed,Arial,sans-serif;font-size:2.03cqw;font-weight:700;line-height:1.1}
+.noma-field.start-time{font-size:2.03cqw}
 .noma-field.signer{font-size:2.68cqw;font-family:Georgia,'Times New Roman',serif;font-weight:400;text-align:center}
 .noma-field.center{text-align:center}
 .noma-signature{position:absolute;display:none;object-fit:contain;object-position:center;mix-blend-mode:multiply}
@@ -240,10 +240,10 @@ body.home-screen .home-note{background:transparent;border:0;padding:9px 5px 0;ma
    <span class="noma-field" data-out="street" style="left:13.09244%;top:32.34245%;width:44.70588%;height:1.90250%;"></span>
    <span class="noma-field" data-out="cityLocative" style="left:61.88235%;top:32.34245%;width:33.78151%;height:1.90250%;"></span>
    <span class="noma-field center" data-out="pspCityLocative" style="left:2.35294%;top:39.03686%;width:93.27731%;height:1.90250%;"></span>
-   <span class="noma-field small" data-out="startDatePdf" style="left:14.31933%;top:43.38882%;width:12.60504%;height:1.68847%;"></span>
-   <span class="noma-field small start-time" data-out="startTimePdf" style="left:31.83193%;top:43.38882%;width:4.87395%;height:1.68847%;"></span>
-   <span class="noma-field small" data-out="endDatePdf" style="left:44.58824%;top:43.38882%;width:12.60504%;height:1.68847%;"></span>
-   <span class="noma-field small" data-out="endTimePdf" style="left:62.63866%;top:43.38882%;width:5.88235%;height:1.68847%;"></span>
+   <span class="noma-field small" data-out="startDatePdf" style="left:14.31933%;top:43.03%;width:12.60504%;height:1.68847%;"></span>
+   <span class="noma-field small start-time" data-out="startTimePdf" style="left:31.83193%;top:43.03%;width:5.42017%;height:1.68847%;"></span>
+   <span class="noma-field small" data-out="endDatePdf" style="left:44.58824%;top:43.03%;width:12.60504%;height:1.68847%;"></span>
+   <span class="noma-field small" data-out="endTimePdf" style="left:62.63866%;top:43.03%;width:5.88235%;height:1.68847%;"></span>
    <span class="noma-field" data-out="contactName" style="left:10.16807%;top:68.51367%;width:37.64706%;height:2.02140%;"></span>
    <span class="noma-field" data-out="contactPhone" style="left:48.73950%;top:68.51367%;width:22.68908%;height:2.02140%;"></span>
    <span class="noma-field signer" data-out="signer" style="left:64.82353%;top:77.31272%;width:21.51261%;height:2.37812%;"></span>
@@ -339,7 +339,7 @@ function prettyDate(date){if(!/^\d{4}-\d\d-\d\d$/.test(date||''))return '……�
 function prettyTime(time){return (time||'……').replace(':','.').replace(/^0(?=\d\.)/,'');}
 function refreshPreview(){
  const d=getFields();
- const values={...d,startDatePdf:prettyDate(d.startDate)+' r.',endDatePdf:prettyDate(d.endDate)+' r.',startTimePdf:'.\u00a0'+prettyTime(d.startTime),endTimePdf:prettyTime(d.endTime)};
+ const values={...d,startDatePdf:prettyDate(d.startDate)+' r.',endDatePdf:prettyDate(d.endDate)+' r.',startTimePdf:'.'+prettyTime(d.startTime),endTimePdf:prettyTime(d.endTime)};
  document.querySelectorAll('[data-out]').forEach(el=>el.textContent=values[el.dataset.out]||'');
  displaySavedSignature();
  requestAnimationFrame(fitAllFields);

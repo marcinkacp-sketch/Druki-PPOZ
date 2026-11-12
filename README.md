@@ -69,3 +69,9 @@ Historia PDF to lista nazw i dat lokalnych wygenerowań — rzeczywiste PDF zapi
 Ekran Start wykorzystuje grafikę ATOM SERWIS, motyw niebiesko-czerwony i czerwony wóz strażacki z drugiego zatwierdzonego projektu graficznego. Pod nim jest duży przycisk „Nowe zgłoszenie NOMA 2”, cztery niezależne kafelki funkcji, lokalna historia zgłoszeń oraz dolna nawigacja Start / Nowe zgłoszenie / Ustawienia. Historia pokazuje wyłącznie rzeczywiste lokalne nazwy ostatnio utworzonych dokumentów (nie przykładowe dane demonstracyjne); pliki są w folderze wybranym w systemowym oknie zapisu Androida. Formularz i PDF NOMA 2 pozostają niezmienione.
 
 W Androidzie `versionCode=3`, `versionName=1.2.0`. Klucz z pierwszego diagnostycznego APK nie jest stałym kluczem wydania. Do bezstratnych przyszłych aktualizacji należy skonfigurować wszystkie cztery sekrety `PPOZ_KEYSTORE_*` w ustawieniach GitHub i korzystać wyłącznie z wydań o tej samej sygnaturze. Przed przejściem z APK debug na wersję release konieczne może być odinstalowanie dotychczasowej aplikacji, co usuwa jej lokalne dane.
+
+## Android 1.2.1 — korekta dat i godzin w oficjalnym PDF
+
+Cztery pola daty i godziny mają tę samą czcionkę o kroju zwężonym, tę samą wielkość i wspólną linię bazową z nadrukiem „od dnia / godz. / do dnia / godz.”. Usunięto osobne zmniejszanie pierwszej godziny i dodatkową spację po „godz.”. Skorygowano pozycję pionową, nie modyfikując stałych elementów formularza NOMA 2.
+
+`versionCode=4`, `versionName=1.2.1`, cache PWA `druki-ppoz-v7`. Wydania podpisane stałym kluczem wspierają przyszłe aktualizacje przez instalowanie nowszego APK **z tym samym certyfikatem**. Zmiana z podpisu debug na podpis release **nie działa jako aktualizacja w miejscu**; najpierw eksportuj kopię bazy, zabezpiecz źródłowy obraz podpisu i PDF, potem odinstaluj testową aplikację i zainstaluj release, importując bazę i podpis.
