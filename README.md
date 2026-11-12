@@ -1,45 +1,42 @@
-# Druki PPOŻ – czasowe odłączenie monitoringu pożarowego
+# Druki PPOŻ — oficjalny formularz NOMA 2
 
-Gotowa aplikacja przeglądarkowa/PWA na Androida, działająca także bez dostępu do Internetu po pierwszym otwarciu (z GitHub Pages).
+Aplikacja PWA na telefon (Android / Chrome) do przygotowania wniosku o **czasowe odłączenie obiektu od monitoringu pożarowego**.
 
-## Jak działa
+**Druk w PDF ma pozostać w układzie formularza NOMA 2 z dokumentu przekazanego przez użytkownika.** Dlatego aplikacja **nie tworzy własnego układu dokumentu**: wyświetla oryginalny formularz jako nieruchome tło i uzupełnia wyłącznie pola zmienne. Tło wyczyszczono z przykładowych danych i fotografii podpisu. Wynik należy zawsze porównać wizualnie z wzorem przed przesłaniem.
 
-- Po uruchomieniu **obie daty** automatycznie przyjmują **dzisiejszy dzień wg zegara telefonu**. W razie potrzeby można je zmienić.
-- **Godziny są puste** – użytkownik ręcznie wybiera początek i koniec w polach godziny.
-- W pole „Szukaj” wpisz pierwsze litery obiektu, wybierz podpowiedź, a nazwa, ulica i miejscowość wypełnią się automatycznie. Miejscowość PSP jest ustawiana na miejscowość obiektu, ale **wymaga weryfikacji**.
-- Dokument generuje Word (.docx), a opcja PDF otwiera drukowanie → „Zapisz jako PDF”.
-- Można poprawiać adresy, dodawać nowe obiekty, eksportować i przywracać bazę JSON. Zmiany przechowuje przeglądarka **tylko na danym urządzeniu**.
-- Baza startowa zawiera **73 pozycje** przepisane z dostarczonego pliku Word; niektóre dane wymagają sprawdzenia.
+## Co robi aplikacja
 
-## Na telefonie – bez GitHub
+- Wyszukuje obiekt już po pierwszych literach jego nazwy, miejscowości lub ulicy; wypełnia nazwę, ulicę i miasto. Baza początkowa: 73 obiekty z przesłanego Worda. Niektóre adresy są niepełne i wymagają weryfikacji.
+- Obie daty automatycznie ustawia na bieżący dzień według telefonu. Godziny rozpoczęcia i zakończenia użytkownik podaje ręcznie. Waliduje kolejność dat i godzin.
+- Wypełnia w oryginalnym formularzu NOMA 2: rodzaj prac, obiekt, ulicę, miasto, miejscowość PSP, daty/godziny, drugą osobę kontaktową i telefon, imię i nazwisko podpisującego oraz — jeżeli zapisano — obraz podpisu.
+- **Przypisuje podpis do osoby**, np. Marcin Kacperski. W sekcji kontaktu wybierz podpisującego, a następnie prześlij PNG/JPG/WebP albo Word DOCX zawierający **dokładnie jeden** obraz. Obraz zostanie zapisany na tym urządzeniu. Następnym razem podpis pojawi się automatycznie po wybraniu tej osoby; działa również, gdy imię i nazwisko wpisane są w odwrotnej kolejności.
+- Pozwala usunąć i wymienić podpis osoby. **Obrazy podpisów nigdy nie są wgrywane do repozytorium ani do GitHub Pages.** Trzymane są w `localStorage` tylko w danej przeglądarce pod adresem strony; wyczyszczenie danych strony usuwa je, a instalacja innej przeglądarki nie przejmuje podpisów.
+- Pozwala dodawać i poprawiać obiekty oraz eksportować bazę obiektów do JSON. **Eksport bazy nie obejmuje zapisanych podpisów.**
+- Drukuje do PDF z dialogu przeglądarki: przycisk **„Druk NOMA 2 — zapisz PDF”** → „Zapisz jako PDF”, format A4, jedna strona. Generator Worda o innym układzie został wycofany, aby nie pomylić go z formularzem operatora.
 
-Można użyć pojedynczego pliku `index.html` (równoważnego `Druki_PPOZ_na_telefon.html`) po jego otwarciu w przeglądarce Androida. W tym trybie niektóre przeglądarki mogą blokować zapisywanie danych lub instalację na ekranie głównym – dlatego zalecane jest uruchomienie przez GitHub Pages.
+## Uruchamianie na Androidzie
 
-## Instalacja przez GitHub Pages
+1. Otwórz `https://marcinkacp-sketch.github.io/Druki-PPOZ/` w Google Chrome.
+2. W menu Chrome wybierz **Zainstaluj aplikację** / **Dodaj do ekranu głównego**.
+3. Wpisz godziny, wybierz obiekt i osobę. Wczytaj podpis tej osoby tylko raz, jeśli ma być automatycznie umieszczany w kolejnych drukach.
+4. Wybierz PDF i sprawdź wizualnie cały wydruk przed wysłaniem.
 
-1. Utwórz **osobne** repozytorium GitHub (np. `Druki-PPOZ`).
-2. Wyślij wszystkie pliki i folder `icons/` do głównego katalogu repozytorium.
-3. W repozytorium: **Settings → Pages → Build and deployment → Deploy from a branch → main / (root) → Save**.
-4. Otwórz wygenerowany adres strony (zwykle `https://TWOJ_LOGIN.github.io/Druki-PPOZ/`) w **Chrome na Androidzie**.
-5. W menu Chrome wybierz **Zainstaluj aplikację** lub **Dodaj do ekranu głównego**.
-6. Po pierwszym poprawnym otwarciu aplikacja działa offline. Aktualizacje strony mogą wymagać ponownego włączenia internetu lub odświeżenia aplikacji.
+Po pierwszym otwarciu strona może działać offline dzięki Service Worker. Obiekty i podpisy przechowują się lokalnie; bez instalacji odrębnego serwera bazodanowego.
 
-> GitHub Pages dla publicznego repozytorium udostępnia kod i osadzone w nim nazwy, adresy oraz numery kontaktowe wszystkim. Nie publikuj niejawnych danych.
+## Kod i budowanie
 
-## Rozwój
+- `src/app.template.html` — formularz oraz mechanizm uzupełniania oficjalnego druku i lokalnego podpisu.
+- `templates/noma2_blank.png` — tło powstałe z przekazanego PDF, z którego usunięto przykładowe dane i podpis.
+- `data/objects.json` — dane obiektów.
+- `vendor/jszip.min.js` — biblioteka JSZip, wykorzystywana do lokalnego wyciągnięcia obrazu podpisu z pliku `.docx` (MIT).
+- `scripts/build.py` — generuje `index.html` z bazy, kodu i JSZip. Python 3 (bez zewnętrznych zależności).
+- `manifest.webmanifest` i `service-worker.js` — instalacja i pamięć offline.
+- `tests/test_smoke.py` — testy kontrolne `python -m unittest discover -s tests`.
 
-- `data/objects.json`: baza obiektów, format `[{id,name,city,street,source,needsReview}]`.
-- `templates/szablon_odlaczenia.docx`: szablon Word z polami `{{OBJECT}}`, `{{STREET}}` itd.
-- `src/app.template.html`: kod źródłowy strony i logiki.
-- `vendor/jszip.min.js`: biblioteka JSZip używana offline do wypełniania DOCX (licencja MIT).
-- `scripts/build.py`: generuje kompletny `index.html` z bazy, szablonu i kodu. **Python 3, bez instalacji pakietów**.
+Po zmianach: `python scripts/build.py`, sprawdź wydruk i zwiększ wersję `CACHE` w `service-worker.js` przy zmianach zasobów offline.
 
-Uruchom `python scripts/build.py` po zmianach. Przy zmianie `index.html` w istniejącej instalacji podnieś numer `CACHE` w `service-worker.js` np. z `v1` na `v2`, by aktualizacja dotarła do użytkowników offline.
+## Zastrzeżenia
 
-## Ważne
+Sam wydruk **nie powoduje odłączenia monitoringu i nie wysyła powiadomienia do NOMA 2**. Przed użyciem trzeba sprawdzić aktualność danych, właściwą jednostkę PSP, okres odłączenia i procedury operatora, a także potwierdzić, czy NOMA 2 dopuszcza taką formę podpisu w przesyłanym wniosku. Umieszczenie obrazu podpisu nie nadaje samo z siebie dokumentowi statusu kwalifikowanego podpisu elektronicznego.
 
-Program **nie odłącza systemu** i nie przekazuje zgłoszenia operatorowi. Trzeba potwierdzić procedurę, dane obiektu i kontakt telefoniczny, a wygenerowany druk sprawdzić i zatwierdzić. Wzór odpowiada merytorycznie dostarczonemu dokumentowi, ale nie przenosi automatycznie odręcznego podpisu i pieczątki.
-
-## Testy automatyczne
-
-W repozytorium dostępny jest test kontrolny bez dodatkowych bibliotek: `python -m unittest discover -s tests -p test_smoke.py`. Sprawdza bazę 73 obiektów, manifest PWA i podstawowe pliki aplikacji. Testy przeglądarkowe oraz generowania Word/PDF przeprowadzono podczas przygotowania wersji lokalnej; skrypt tych testów nie jest zawarty w repozytorium.
+**Uwaga:** repozytorium GitHub jest publiczne. Nie umieszczaj pliku z rzeczywistym podpisem, skanu dokumentu z podpisem ani wypełnionych druków w kodzie repozytorium.

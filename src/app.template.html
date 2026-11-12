@@ -41,6 +41,26 @@ textarea{resize:vertical;min-height:60px}.twocol{display:grid;grid-template-colu
  #paper .signature{margin-top:30pt}
 }
 
+/* Oficjalny dokument: tło pochodzi z oryginalnego formularza NOMA 2. */
+.noma-paper{position:relative!important;display:block!important;width:100%!important;max-width:595px!important;aspect-ratio:595/841!important;min-height:0!important;margin:auto!important;padding:0!important;overflow:hidden!important;background:white!important;container-type:inline-size;box-shadow:0 9px 35px #263a5940}
+.noma-base{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:fill}
+.noma-field{position:absolute;display:block;overflow:hidden;white-space:nowrap;line-height:1.05;font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:2.35cqw;color:#000;text-align:left}
+.noma-field.small{font-family:Arial,Helvetica,sans-serif;font-size:2.0cqw;font-weight:700;line-height:1.1}
+.noma-field.signer{font-size:2.68cqw;font-family:Georgia,'Times New Roman',serif;font-weight:400;text-align:center}
+.noma-field.center{text-align:center}
+.noma-signature{position:absolute;display:none;object-fit:contain;object-position:center;mix-blend-mode:multiply}
+#sig-preview{max-height:76px;max-width:180px;object-fit:contain;display:none;border:1px solid #e3eaf2;background:white;padding:5px}
+.sig-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#sign-status{font-size:12px;color:#536680}
+@media(max-width:520px){.noma-paper{font-size:initial!important;padding:0!important;aspect-ratio:595/841!important}}
+@page{size:A4;margin:0}
+@media print{
+ .header,.panels,.preview-head,.footer{display:none!important}
+ body,html{margin:0!important;padding:0!important;background:#fff!important}
+ .layout,.document-preview,.preview{margin:0!important;padding:0!important;display:block!important;max-width:none!important;max-height:none!important;overflow:visible!important}
+ #paper.noma-paper{position:relative!important;display:block!important;width:210mm!important;height:297mm!important;max-width:none!important;min-height:0!important;aspect-ratio:auto!important;box-shadow:none!important;margin:0!important;padding:0!important;border:0!important;overflow:hidden!important;page-break-inside:avoid!important;break-inside:avoid!important}
+}
+
 </style>
 </head>
 <body>
@@ -68,28 +88,32 @@ textarea{resize:vertical;min-height:60px}.twocol{display:grid;grid-template-colu
    <div class="field"><label for="contactPreset">Osoba kontaktowa</label><select id="contactPreset"></select></div>
    <div class="twocol"><div class="field"><label for="contactName">Imię i nazwisko *</label><input id="contactName"></div><div class="field"><label for="contactPhone">Telefon *</label><input id="contactPhone" inputmode="tel"></div></div>
    <div class="field"><label for="signer">Imię i nazwisko osoby podpisującej</label><input id="signer"></div>
-   <p class="help">Stały numer B.U.S. :ATOMSERVICE pozostaje w druku. Podpis / pieczęć należy uzupełnić zgodnie z zasadami firmy.</p>
+   <div class="field"><label for="signature-file">Podpis / pieczątka dla wybranej osoby (PNG, JPG lub Word DOCX)</label><input type="file" id="signature-file" accept="image/png,image/jpeg,image/webp,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></div>
+   <div class="sig-row"><img id="sig-preview" alt="Podgląd zapisanej pieczątki"><span id="sign-status">Brak zapisanego podpisu dla tej osoby.</span></div>
+   <div class="actions-row"><button type="button" class="smallbtn" id="remove-signature">Usuń podpis tej osoby</button></div>
+   <p class="help">Podpis zapisuje się tylko w pamięci tej przeglądarki i automatycznie wstawia po ponownym wybraniu osoby. Nie trafia do publicznego GitHuba. Jeśli usuniesz dane przeglądarki, trzeba dodać podpis ponownie.</p>
   </section>
-  <section class="panel action-panel"><div class="action-buttons"><button id="downloadWord" class="btn btn-primary" type="button">↓ Pobierz Word (.docx)</button><button id="printPdf" class="btn btn-secondary" type="button">▣ Zapisz jako PDF</button></div><p id="message" role="status" class="subline">Druk powstaje na telefonie. Sam dokument nie odłącza monitoringu — zgłoś prace operatorowi.</p><div class="actions-row" style="justify-content:center"><button id="export-data" type="button" class="smallbtn">Kopia bazy (JSON)</button><button id="import-btn" type="button" class="smallbtn">Wczytaj kopię bazy</button><input id="import-file" type="file" accept=".json,application/json" hidden></div></section>
+  <section class="panel action-panel"><div class="action-buttons" style="grid-template-columns:1fr"><button id="printPdf" class="btn btn-primary" type="button">▣ Druk NOMA 2 — zapisz PDF</button></div><p id="message" role="status" class="subline">Druk powstaje na telefonie. Sam dokument nie odłącza monitoringu — zgłoś prace operatorowi.</p><div class="actions-row" style="justify-content:center"><button id="export-data" type="button" class="smallbtn">Kopia bazy (JSON)</button><button id="import-btn" type="button" class="smallbtn">Wczytaj kopię bazy</button><input id="import-file" type="file" accept=".json,application/json" hidden></div></section>
  </div>
- <section class="document-preview"><div class="preview-head no-print"><h2>Podgląd gotowego druku</h2><span class="chip">A4 · 1 strona</span></div>
-  <div class="preview"><article id="paper" class="paper">
-   <div class="right letterhead">Centrum Monitorowania<br>Operatora Systemu<br>NOMA 2<br>fax /32/ 256 14 39<br>tel. /32/ 205 25 89, 256 18 24</div>
-   <h3>CZASOWE ODŁĄCZENIE OBIEKTU<br>OD MONITORINGU POŻAROWEGO</h3>
-   <p class="formline">W związku z prowadzonymi pracami &nbsp; <span class="value" data-out="works"></span></p><p class="hint">(określić charakter prac)</p>
-   <p class="formline">w obiekcie &nbsp; <span class="value" data-out="siteName"></span></p><p class="hint">(nazwa obiektu)</p>
-   <p class="formline">przy ulicy &nbsp; <span class="value" data-out="street"></span> &nbsp;&nbsp; w &nbsp; <span class="value" data-out="city"></span></p><p class="hint">(nazwa ulicy) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (nazwa miasta)</p>
-   <p class="paragraph">prosimy o czasowe odłączenie go od systemu monitoringu pożarowego w Centrum Odbiorczym Alarmów Pożarowych Komendy Miejskiej / Komendy Powiatowej Państwowej Straży Pożarnej w:</p>
-   <p class="center value" data-out="pspCity"></p><p class="hint">(nazwa miasta)</p>
-   <p class="date-line">od dnia &nbsp; <span class="value" data-out="startDateFmt"></span> r. godz. <span class="value" data-out="startTimeFmt"></span> &nbsp;&nbsp; do dnia &nbsp; <span class="value" data-out="endDateFmt"></span> r. godz. <span class="value" data-out="endTimeFmt"></span></p>
-   <p>w celu zapobieżenia wyjazdom wozów straży pożarnej do fałszywych alarmów.</p>
-   <p class="paragraph info">Jednocześnie zobowiązujemy się do telefonicznego informowania Centrum Monitorowania Operatora Systemu NOMA 2 w momencie rozpoczęcia i zakończenia prac.</p>
-   <p class="paragraph">Przyjmujemy do wiadomości, że w przypadku rzeczywistego pożaru zachowany zostaje obowiązek powiadamiania najbliższej jednostki Straży Pożarnej (tel. 998 lub inne środki łączności) – wg zasad obowiązujących dla obiektów monitorowanych art.4.1 pkt 5 i 7 Ustawy z dn. 24 sierpnia 1991r. o ochronie przeciwpożarowej.</p>
-   <div class="contacts"><p>Osoby kontaktowe na wypadek alarmu:</p><div class="contacts-line"><span class="contact-name">1. &nbsp; B.U.S. :ATOMSERVICE</span><span>32 253 94 72</span></div><div class="contacts-line"><span class="contact-name">2. &nbsp; <span data-out="contactName"></span></span><span data-out="contactPhone"></span></div></div>
-   <div class="signature"><div class="rule"></div><div class="signer" data-out="signer"></div></div>
+ <section class="document-preview"><div class="preview-head no-print"><h2>Podgląd gotowego druku</h2><span class="chip">Oryginalny wzór NOMA 2 · A4</span></div>
+  <div class="preview"><article id="paper" class="noma-paper" aria-label="Druk zgodny z NOMA 2">
+   <img class="noma-base" src="./templates/noma2_blank.png" alt="Oryginalny wzór druku NOMA 2 bez danych i podpisu">
+   <span class="noma-field" data-out="works" style="left:33.32773%;top:22.94887%;width:62.35294%;height:2.02140%;"></span>
+   <span class="noma-field" data-out="siteName" style="left:13.09244%;top:26.18312%;width:82.52101%;height:1.96195%;"></span>
+   <span class="noma-field" data-out="street" style="left:13.09244%;top:32.34245%;width:44.70588%;height:1.90250%;"></span>
+   <span class="noma-field" data-out="city" style="left:61.88235%;top:32.34245%;width:33.78151%;height:1.90250%;"></span>
+   <span class="noma-field center" data-out="pspCity" style="left:2.35294%;top:39.03686%;width:93.27731%;height:1.90250%;"></span>
+   <span class="noma-field small" data-out="startDatePdf" style="left:14.31933%;top:43.38882%;width:12.60504%;height:1.68847%;"></span>
+   <span class="noma-field small" data-out="startTimePdf" style="left:31.83193%;top:43.38882%;width:5.71429%;height:1.68847%;"></span>
+   <span class="noma-field small" data-out="endDatePdf" style="left:44.58824%;top:43.38882%;width:12.60504%;height:1.68847%;"></span>
+   <span class="noma-field small" data-out="endTimePdf" style="left:62.63866%;top:43.38882%;width:5.88235%;height:1.68847%;"></span>
+   <span class="noma-field" data-out="contactName" style="left:10.16807%;top:68.51367%;width:37.64706%;height:2.02140%;"></span>
+   <span class="noma-field" data-out="contactPhone" style="left:48.73950%;top:68.51367%;width:22.68908%;height:2.02140%;"></span>
+   <span class="noma-field signer" data-out="signer" style="left:64.82353%;top:77.31272%;width:21.51261%;height:2.37812%;"></span>
+   <img id="signature-on-paper" class="noma-signature" style="left:68.86%;top:64.59%;width:17.63%;height:13.61%;" alt="Zapisany podpis osoby podpisującej">
   </article></div>
  </section>
-</main><footer class="footer no-print">Wersja lokalna · Dane obiektów mogą wymagać weryfikacji · Bez połączenia z serwerem</footer>
+</main><footer class="footer no-print">Wzór NOMA 2 · Wyłącznie pola dynamiczne · Dane zapisane lokalnie</footer>
 <script>/*ZIP_JS*/</script>
 <script>
 const INCLUDED_OBJECTS = /*OBJECTS_JSON*/;
@@ -101,7 +125,7 @@ const CONTACTS = [
  {name:'Dariusz Gałecki',phone:'509 400 693'},
  {name:'Wojtas Łukasz',phone:'723917147'}
 ];
-const TEMPLATE_BASE64 = '/*TEMPLATE_B64*/';
+// PDF wydrukowany z identycznego formularza NOMA 2; nie generuj alternatywnego DOCX.
 const STORAGE_KEY = 'druki-ppoz-local-v1';
 const $ = id => document.getElementById(id);
 let settings = {overrides:{},custom:[],selected:'word-104'};
@@ -120,7 +144,23 @@ function choose(id){const obj=allObjects().find(x=>x.id===id);if(!obj)return;set
 function getFields(){return Object.fromEntries(['siteName','street','city','pspCity','works','startDate','startTime','endDate','endTime','contactName','contactPhone','signer'].map(id=>[id,$(id).value.trim()]));}
 function prettyDate(date){if(!/^\d{4}-\d\d-\d\d$/.test(date||''))return '…………';const [y,m,d]=date.split('-');return `${d}.${m}.${y}`;}
 function prettyTime(time){return (time||'……').replace(':','.').replace(/^0(?=\d\.)/,'');}
-function refreshPreview(){const d=getFields();const values={...d,startDateFmt:prettyDate(d.startDate),endDateFmt:prettyDate(d.endDate),startTimeFmt:prettyTime(d.startTime),endTimeFmt:prettyTime(d.endTime)};document.querySelectorAll('[data-out]').forEach(el=>el.textContent=values[el.dataset.out]||'……………………');}
+function refreshPreview(){
+ const d=getFields();
+ const values={...d,startDatePdf:prettyDate(d.startDate)+' r.',endDatePdf:prettyDate(d.endDate)+' r.',startTimePdf:'.'+prettyTime(d.startTime),endTimePdf:prettyTime(d.endTime)};
+ document.querySelectorAll('[data-out]').forEach(el=>el.textContent=values[el.dataset.out]||'');
+ displaySavedSignature();
+ requestAnimationFrame(fitAllFields);
+}
+function fitAllFields(){
+ const canvas=document.createElement('canvas');const ctx=canvas.getContext('2d');
+ document.querySelectorAll('.noma-field').forEach(el=>{
+   el.style.fontSize='';const computed=getComputedStyle(el);const fontSize=parseFloat(computed.fontSize);
+   if(!fontSize||!el.clientWidth)return;
+   ctx.font=`${computed.fontWeight} ${fontSize}px ${computed.fontFamily}`;
+   const text=el.textContent||'';const measured=ctx.measureText(text).width;
+   if(measured>el.clientWidth-1)el.style.fontSize=(fontSize*Math.max(.55,(el.clientWidth-2)/measured))+'px';
+ });
+}
 function setMessage(msg,problem=false){$('message').textContent=msg;$('message').style.color=problem?'#ad3427':'#59718c';}
 function validate(){const d=getFields();const required=[['siteName','nazwę obiektu'],['street','ulicę i numer'],['city','miejscowość obiektu'],['pspCity','miejscowość PSP'],['works','rodzaj prac'],['contactName','osobę kontaktową'],['contactPhone','telefon kontaktowy'],['startDate','datę od'],['startTime','godzinę od'],['endDate','datę do'],['endTime','godzinę do']];for(const [key,text] of required){if(!d[key]){setMessage('Uzupełnij: '+text,true);$(key).focus();return null;}}
  const start=new Date(`${d.startDate}T${d.startTime}:00`), end=new Date(`${d.endDate}T${d.endTime}:00`);
@@ -129,9 +169,7 @@ function validate(){const d=getFields();const required=[['siteName','nazwę obie
 }
 function slug(str){return normalize(str).replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,45)||'obiekt';}
 function downloadBlob(blob,filename){const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
-const xmlEscape = val => String(val??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
-async function makeWord(){const d=validate();if(!d)return;const btn=$('downloadWord');try{btn.disabled=true;setMessage('Przygotowywanie dokumentu DOCX…');const zip=await JSZip.loadAsync(TEMPLATE_BASE64,{base64:true});let xml=await zip.file('word/document.xml').async('string');const variables={OBJECT:d.siteName,STREET:d.street,CITY:d.city,PSP_CITY:d.pspCity,WORKS:d.works,DATE_FROM:prettyDate(d.startDate),DATE_TO:prettyDate(d.endDate),TIME_FROM:prettyTime(d.startTime),TIME_TO:prettyTime(d.endTime),CONTACT_PERSON:d.contactName,CONTACT_PHONE:d.contactPhone,SIGNER:d.signer||' '};for(const [k,v] of Object.entries(variables)){const placeholder='{{'+k+'}}';if(!xml.includes(placeholder))throw Error('Brak pola '+k);xml=xml.replaceAll(placeholder,xmlEscape(v));}zip.file('word/document.xml',xml);const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});downloadBlob(blob,`Odlaczenie_${slug(d.city)}_${d.startDate}.docx`);setMessage('Zapisano dokument Word. Sprawdź go przed przekazaniem.');}catch(e){setMessage('Nie udało się przygotować DOCX: '+e.message,true);}finally{btn.disabled=false;}}
-function printPdf(){if(!validate())return;setMessage('W oknie drukowania wybierz „Zapisz jako PDF”.');window.print();}
+function printPdf(){if(!validate())return;const bg=document.querySelector('.noma-base');if(!bg?.complete||!bg.naturalWidth){setMessage('Wzór NOMA 2 jeszcze się nie załadował. Sprawdź połączenie lub odśwież.',true);return;}fitAllFields();setMessage('W oknie drukowania wybierz „Zapisz jako PDF”. Sprawdź podgląd jednej strony A4.');window.print();}
 function saveObject(){const d=getFields();if(!d.siteName){setMessage('Najpierw wpisz nazwę obiektu.',true);return;}const id=settings.selected;const entry={id:id&&allObjects().some(x=>x.id===id)?id:'local-'+Date.now(),name:d.siteName,city:d.city,street:d.street,source:'',needsReview:!(d.city&&d.street)};
  if(id&&INCLUDED_OBJECTS.some(x=>x.id===id))settings.overrides[id]=entry;
  else{const pos=settings.custom.findIndex(x=>x.id===entry.id);if(pos>=0)settings.custom[pos]=entry;else settings.custom.push(entry);}settings.selected=entry.id;persist();showResults();setMessage('Zapisano dane obiektu na tym urządzeniu.');}
@@ -139,15 +177,80 @@ function newObject(){settings.selected=null;$('search').value='';['siteName','st
 function downloadBackup(){const b=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),overrides:settings.overrides||{},custom:settings.custom||[]},null,2)],{type:'application/json;charset=utf-8'});downloadBlob(b,'druki_ppoz_kopia_bazy.json');setMessage('Zapisano kopię lokalnych zmian i nowych obiektów.');}
 async function importBackup(ev){const file=ev.target.files?.[0];if(!file)return;try{const input=JSON.parse(await file.text());if(input.version!==1||!input.overrides||!Array.isArray(input.custom))throw Error('Nieprawidłowy plik bazy.');if(!confirm('Wczytać kopię i zastąpić własne zapisane zmiany obiektów?'))return;settings.overrides=input.overrides;settings.custom=input.custom;persist();showResults();choose('word-104');setMessage('Wczytano kopię bazy.');}catch(e){setMessage('Nie udało się wczytać bazy: '+e.message,true);}finally{ev.target.value='';}}
 function localDateString(date){return [date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');}
+// Podpisy są przypisane do osoby podpisującej i zapisywane wyłącznie lokalnie.
+const SIGNATURE_STORAGE_KEY='druki-ppoz-signatures-v1';
+let personSignatures={};
+try{const parsed=JSON.parse(localStorage.getItem(SIGNATURE_STORAGE_KEY)||'{}');if(parsed&&typeof parsed==='object')personSignatures=parsed;}catch(e){}
+function signatureKey(name){return normalize(name).replace(/[^a-z\s-]/g,' ').split(/\s+/).filter(Boolean).sort().join(' ');}
+function currentSignerKey(){return signatureKey($('signer').value||$('contactName').value);}
+function displaySavedSignature(){
+ const key=currentSignerKey();const data=personSignatures[key]||'';
+ const img=$('signature-on-paper'),prev=$('sig-preview');
+ img.style.display=data?'block':'none';prev.style.display=data?'block':'none';
+ if(data){img.src=data;prev.src=data;}else{img.removeAttribute('src');prev.removeAttribute('src');}
+ $('sign-status').textContent=data?'Podpis zapisany dla: '+($('signer').value||$('contactName').value):'Brak zapisanego podpisu dla tej osoby.';
+}
+function imageToDataUrl(blob){return new Promise((resolve,reject)=>{
+ const reader=new FileReader();reader.onerror=()=>reject(Error('Nie można wczytać obrazu.'));reader.onload=()=>resolve(reader.result);reader.readAsDataURL(blob);
+});}
+async function extractSignatureBlob(file){
+ if(/\.docx$/i.test(file.name)){
+   const zip=await JSZip.loadAsync(file);
+   const images=Object.keys(zip.files).filter(x=>/^word\/media\/.+\.(png|jpg|jpeg|webp)$/i.test(x));
+   if(images.length!==1)throw Error(images.length?'Word zawiera kilka obrazów. Wyodrębnij jeden podpis do pliku PNG/JPG.':'Nie znaleziono obrazu w pliku Word.');
+   return await zip.file(images[0]).async('blob');
+ }
+ if(!/^image\/(png|jpeg|webp)$/.test(file.type))throw Error('Wybierz plik PNG, JPG lub DOCX z jednym obrazem.');
+ return file;
+}
+function compactSignature(dataURL){return new Promise((resolve,reject)=>{
+ const image=new Image();image.onload=()=>{
+  try{
+   const maxWidth=1000,maxHeight=500,scale=Math.min(1,maxWidth/image.width,maxHeight/image.height);
+   const tmp=document.createElement('canvas');tmp.width=Math.max(1,Math.round(image.width*scale));tmp.height=Math.max(1,Math.round(image.height*scale));
+   const context=tmp.getContext('2d',{willReadFrequently:true});context.drawImage(image,0,0,tmp.width,tmp.height);
+   const px=context.getImageData(0,0,tmp.width,tmp.height);let x0=tmp.width,y0=tmp.height,x1=-1,y1=-1;
+   for(let y=0;y<tmp.height;y++)for(let x=0;x<tmp.width;x++){
+    let i=4*(y*tmp.width+x);const a=px.data[i+3];const dark=Math.min(px.data[i],px.data[i+1],px.data[i+2]);
+    if(a>45&&dark<242){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);}
+   }
+   if(x1<0)throw Error('Obraz podpisu jest pusty lub zbyt jasny.');
+   const margin=Math.max(3,Math.ceil(tmp.width*.01));x0=Math.max(0,x0-margin);y0=Math.max(0,y0-margin);x1=Math.min(tmp.width-1,x1+margin);y1=Math.min(tmp.height-1,y1+margin);
+   const crop=document.createElement('canvas');crop.width=x1-x0+1;crop.height=y1-y0+1;crop.getContext('2d').drawImage(tmp,x0,y0,crop.width,crop.height,0,0,crop.width,crop.height);
+   resolve(crop.toDataURL('image/png'));
+  }catch(e){reject(e);}
+ };image.onerror=()=>reject(Error('Nie udało się odczytać obrazu podpisu.'));image.src=dataURL;
+});}
+async function importPersonSignature(ev){
+ const file=ev.target.files?.[0];if(!file)return;
+ const key=currentSignerKey();const name=$('signer').value.trim();
+ if(!key){setMessage('Najpierw wskaż osobę podpisującą.',true);ev.target.value='';return;}
+ try{
+  const blob=await extractSignatureBlob(file);
+  const data=await compactSignature(await imageToDataUrl(blob));
+  const updated={...personSignatures,[key]:data};
+  localStorage.setItem(SIGNATURE_STORAGE_KEY,JSON.stringify(updated));personSignatures=updated;
+  setMessage('Podpis przypisany do: '+name+'. Przy kolejnym wniosku zostanie wstawiony automatycznie.');refreshPreview();
+ }catch(e){setMessage('Nie zapisano podpisu: '+e.message,true);}
+ finally{ev.target.value='';}
+}
+function removePersonSignature(){
+ const key=currentSignerKey();if(!personSignatures[key])return;
+ if(!confirm('Usunąć zapisany podpis osoby: '+$('signer').value+'?'))return;
+ const next={...personSignatures};delete next[key];
+ try{localStorage.setItem(SIGNATURE_STORAGE_KEY,JSON.stringify(next));personSignatures=next;refreshPreview();setMessage('Podpis usunięty z tego telefonu.');}
+ catch(e){setMessage('Nie można usunąć podpisu: '+e.message,true);}
+}
+
 function init(){const now=new Date();
- $('startDate').value=localDateString(now);$('endDate').value=localDateString(now);$('startTime').value='';$('endTime').value='';$('works').value='konserwacyjnymi';$('signer').value='Kacperski Marcin';
+ $('startDate').value=localDateString(now);$('endDate').value=localDateString(now);$('startTime').value='';$('endTime').value='';$('works').value='konserwacyjnymi';$('signer').value='Marcin Kacperski';
  const presets=$('contactPreset');CONTACTS.forEach((x,i)=>{const opt=document.createElement('option');opt.value=String(i);opt.textContent=x.name+' · '+x.phone;presets.appendChild(opt)});const extra=document.createElement('option');extra.value='other';extra.textContent='Inna osoba (wpisz ręcznie)';presets.appendChild(extra);
- function applyContact(){const chosen=CONTACTS[Number(presets.value)];if(chosen){$('contactName').value=chosen.name;$('contactPhone').value=chosen.phone;}refreshPreview();}presets.addEventListener('change',applyContact);applyContact();
+ function applyContact(){const chosen=CONTACTS[Number(presets.value)];if(chosen){$('contactName').value=chosen.name;$('contactPhone').value=chosen.phone;$('signer').value=chosen.name;}refreshPreview();}presets.addEventListener('change',applyContact);applyContact();
  document.querySelectorAll('input,textarea,select').forEach(el=>{if(el.id!=='search')el.addEventListener('input',refreshPreview)});
- $('search').addEventListener('input',showResults);$('new-site').addEventListener('click',newObject);$('save-site').addEventListener('click',saveObject);$('downloadWord').addEventListener('click',makeWord);$('printPdf').addEventListener('click',printPdf);$('export-data').addEventListener('click',downloadBackup);$('import-btn').addEventListener('click',()=>$('import-file').click());$('import-file').addEventListener('change',importBackup);
+ $('search').addEventListener('input',showResults);$('new-site').addEventListener('click',newObject);$('save-site').addEventListener('click',saveObject);$('signature-file').addEventListener('change',importPersonSignature);$('remove-signature').addEventListener('click',removePersonSignature);$('printPdf').addEventListener('click',printPdf);$('export-data').addEventListener('click',downloadBackup);$('import-btn').addEventListener('click',()=>$('import-file').click());$('import-file').addEventListener('change',importBackup);
  choose(allObjects().some(x=>x.id===settings.selected)?settings.selected:'word-104');
  // Funkcje testowe do automatycznej weryfikacji z użyciem przeglądarki, bez sieci.
- window.__drukiTest={allObjects,getFields,prettyDate,prettyTime,validate,makeWord};
+ window.__drukiTest={allObjects,getFields,prettyDate,prettyTime,validate,signatureKey,displaySavedSignature};
 }
 init();
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {

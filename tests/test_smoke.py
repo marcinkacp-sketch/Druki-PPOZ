@@ -1,21 +1,28 @@
-"""Sanity checks of files used to build the offline app, stdlib only."""
-import json, unittest
+"""Offline, stdlib-only smoke checks for the NOMA 2 form."""
 from pathlib import Path
+import json,unittest
 ROOT=Path(__file__).resolve().parents[1]
-class TestDrukiPpoz(unittest.TestCase):
- def test_catalog(self):
-  objects=json.loads((ROOT/'data/objects.json').read_text(encoding='utf-8'))
-  self.assertEqual(73,len(objects))
-  self.assertEqual(len(objects),len({x['id'] for x in objects}))
-  self.assertTrue(all(x.get('name') for x in objects))
- def test_pwa(self):
-  m=json.loads((ROOT/'manifest.webmanifest').read_text(encoding='utf-8'))
-  self.assertEqual('standalone',m['display'])
-  for icon in m['icons']:
-   self.assertTrue((ROOT/icon['src']).is_file())
- def test_index(self):
-  t=(ROOT/'index.html').read_text(encoding='utf-8')
-  for token in ['INCLUDED_OBJECTS','TEMPLATE_BASE64','startDate','startTime','makeWord']:
-   self.assertIn(token,t)
-if __name__=='__main__':
- unittest.main()
+class TestDrukiPPOZ(unittest.TestCase):
+ def test_object_catalog(self):
+  objects=json.loads((ROOT/'data/objects.json').read_text('utf8'))
+  self.assertEqual(len(objects),73)
+  self.assertEqual(len({o['id'] for o in objects}),73)
+  self.assertTrue(all(o.get('name') for o in objects))
+ def test_official_template(self):
+  f=ROOT/'templates/noma2_blank.png'
+  self.assertTrue(f.exists())
+  self.assertGreater(f.stat().st_size,50000)
+  self.assertEqual(f.read_bytes()[:8],b'\x89PNG\r\n\x1a\n')
+ def test_offline_dependencies(self):
+  manifest=json.loads((ROOT/'manifest.webmanifest').read_text('utf8'))
+  self.assertEqual(manifest['display'],'standalone')
+  sw=(ROOT/'service-worker.js').read_text('utf8')
+  self.assertIn('noma2_blank.png',sw)
+  for icon in manifest['icons']:
+   self.assertTrue((ROOT/icon['src']).exists())
+ def test_generated_page(self):
+  index=(ROOT/'index.html').read_text('utf8')
+  for needle in ['INCLUDED_OBJECTS','noma2_blank.png','signature-file','signatureKey','currentSignerKey','startDate','startTime','printPdf']:
+   self.assertIn(needle,index)
+  self.assertNotIn('Pobierz Word (.docx)',index)
+if __name__=='__main__':unittest.main()
