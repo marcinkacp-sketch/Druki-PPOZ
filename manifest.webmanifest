@@ -1,12 +1,12 @@
 {
-  "name": "Druki PPOŻ – czasowe odłączenie monitoringu",
+  "name": "Druki PPOŻ – Atom Serwis • NOMA 2",
   "short_name": "Druki PPOŻ",
   "description": "Tworzenie druków czasowego odłączenia monitoringu pożarowego z listą obiektów.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#edf2f8",
-  "theme_color": "#122644",
+  "background_color": "#071a35",
+  "theme_color": "#081c3b",
   "lang": "pl",
   "icons": [
     {

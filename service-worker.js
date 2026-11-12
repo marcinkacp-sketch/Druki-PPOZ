@@ -1,5 +1,5 @@
-const CACHE = 'druki-ppoz-v4';
-const STATIC = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './templates/noma2_blank.png'];
+const CACHE = 'druki-ppoz-v5';
+const STATIC = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './graphics/firetruck.webp', './icons/atom-app-icon.png', './templates/noma2_blank.png'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(STATIC)).then(()=>self.skipWaiting()));
 });

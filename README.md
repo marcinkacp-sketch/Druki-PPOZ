@@ -47,3 +47,10 @@ Sam wydruk **nie powoduje odłączenia monitoringu i nie wysyła powiadomienia d
 Przycisk **Pobierz PDF · 1 strona A4** generuje jeden arkusz PDF (595 × 841 pkt) bez okna drukowania i bez serwera. Dane są rysowane na bazie nieruchomego tła oryginalnego formularza NOMA 2. Podpis jest pobierany z pamięci bieżącej przeglądarki i nie jest publikowany w repozytorium. PDF zawiera rasteryzowany obraz całej strony, dlatego tekst nie jest selekcjonowalny.
 
 Jeżeli aplikacja była już instalowana, zamknij ją i otwórz ponownie, aby pobrać nowszą wersję PWA (cache `druki-ppoz-v4`).
+
+
+## Aplikacja Android (APK, niezależna od PWA)
+
+Zbudowany projekt Android znajduje się w `app/`. APK uruchamia lokalny formularz NOMA 2 offline, z brandingiem **ATOM SERWIS**, czerwono-granatową szatą graficzną i wozem strażackim. Zapisywanie PDF korzysta z systemowego okna zapisu Android. Podpisy są zapisywane lokalnie, nie trafiają do publicznego repozytorium ani APK.
+
+Zobacz instrukcję [ANDROID-INSTRUKCJA.md](ANDROID-INSTRUKCJA.md) i zakładkę GitHub Actions `Android APK • Druki PPOŻ`. Testowy APK diagnostyczny może wymagać odinstalowania przy przyszłej przebudowie, bo ma tymczasowy klucz debug. Do trwałych aktualizacji niezbędny jest stabilny klucz wydania.
