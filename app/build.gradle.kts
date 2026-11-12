@@ -7,8 +7,8 @@ android {
         applicationId = "pl.atomservice.drukippoz"
         minSdk = 26
         targetSdk = 34
-        versionCode = 6
-        versionName = "1.3.1"
+        versionCode = 7
+        versionName = "1.3.2"
     }
     signingConfigs {
         create("stableRelease") {
@@ -35,3 +35,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 }
+
+// Secure temporary read-only content URI for PDF attachments.
+dependencies { implementation("androidx.core:core:1.15.0") }

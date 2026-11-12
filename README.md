@@ -125,3 +125,29 @@ nadal obsługiwać tę skrzynkę niezależnie.
 - Rzeczywistego logowania do prywatnej skrzynki nie wykonują testy CI.
 - Hasło ujawnione w rozmowie należy zmienić w panelu dostawcy i zaktualizować
   na wszystkich urządzeniach. Nie udostępniać haseł w czatach ani w repozytorium.
+
+
+## Android 1.3.2 — wysyłanie przez Thunderbird, bez danych SMTP
+
+Po zatwierdzeniu formularza użytkownik może nacisnąć **„Zatwierdź i otwórz Thunderbird”**.
+Aplikacja utworzy PDF 1-stronicowy zgodny z NOMA 2, otworzy wiadomość z
+odbiorcą `sma@noma2.pl`, tematem, treścią i załączonym PDF. Użytkownik
+sprawdza konto nadawcy (w Thunderbirdzie może mieć więcej niż jedno konto),
+odczytuje wiadomość i sam naciska **„Wyślij”**.
+
+Technicznie: natywny Android `ACTION_SEND`, `EXTRA_EMAIL`, `EXTRA_STREAM`,
+URI `content://` udostępniane przez AndroidX `FileProvider` z grantem
+**tylko do odczytu**, wyłącznie dla folderu `cache/noma-mail/`. Hasło SMTP
+nie jest już potrzebne, a stare zaszyfrowane hasło z tej aplikacji jest
+usuwane po uruchomieniu 1.3.2. Druki PPOŻ nie potrzebuje uprawnienia Internet.
+Jeśli Thunderbird nie jest dostępny, Android pokazuje systemowy wybór aplikacji.
+
+**Ważna różnica statusów:** otwarcie edytora jest rejestrowane tylko jako
+„Przekazano do poczty — wysyłka niepotwierdzona”. Android nie otrzymuje od
+Thunderbirda wiarygodnego potwierdzenia faktycznej wysyłki ani doręczenia.
+Wysłanie zgłoszenia NOMA 2 nadal wymaga sprawdzenia wiadomości i naciśnięcia
+„Wyślij”; operator NOMA 2 nadal powinien zostać poinformowany telefonicznie.
+
+Przy aktualizacji stabilnie podpisanej wersji 1.3.1 na 1.3.2 zachowywane są
+lokalne obiekty i podpisy; nie należy odinstalowywać aplikacji. Nie wysyłamy
+żadnych zgłoszeń do NOMA 2 podczas testów CI.

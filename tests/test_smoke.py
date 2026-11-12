@@ -13,17 +13,20 @@ class TestDrukiPPOZ(unittest.TestCase):
   for token in ['app-bottom-nav','setupAppTabs','data-screen="home"','data-screen="request"','data-go="objects"','data-part="signatures"','home-recent-list','hero-reference-2.webp','document-history','addDocumentHistory']:
    self.assertIn(token,index)
   gradle=(ROOT/'app/build.gradle.kts').read_text('utf8')
-  self.assertIn('versionCode = 6',gradle)
+  self.assertIn('versionCode = 7',gradle)
   self.assertIn('stableRelease',gradle)
-  self.assertIn('versionName = "1.3.1"',gradle)
- def test_native_smtp_ui_is_explicit(self):
+  self.assertIn('versionName = "1.3.2"',gradle)
+ def test_thunderbird_share_with_confirmation(self):
   index=(ROOT/'app/src/main/assets/index.html').read_text('utf8')
-  for token in ('id="sendNomaPdf"','id="smtp-password"','id="smtp-test"','id="smtp-inspect"',
-                'sma@noma2.pl','mail.atomservice.eu','window.AtomMail.sendPdf',
-                'confirm(confirmText)','window.onNativeMailResult',
-                'Nie zamykaj aplikacji','Status wysyłki'):
+  for token in ('id="sendNomaPdf"','Zatwierdź i otwórz Thunderbird',
+                'window.AtomShare.openEmail','window.onNativeShareResult',
+                'confirm(confirmText)','sma@noma2.pl','Przekazano do poczty',
+                'wysyłka niepotwierdzona','id="mail-not-supported"'):
    self.assertIn(token,index)
-  self.assertNotIn('smtp-password-storage',index)
+  for forbidden in ('AtomMail','smtp-password','window.AtomMail.sendPdf',
+                    'window.onNativeMailResult','Serwer SMTP przyjął wiadomość'):
+   self.assertNotIn(forbidden,index)
+  self.assertIn('pdfFromCanvas(',index)
  def test_datetime_typography_and_alignment(self):
   import re
   index=(ROOT/'app/src/main/assets/index.html').read_text('utf8')
@@ -39,7 +42,7 @@ class TestDrukiPPOZ(unittest.TestCase):
   self.assertIn("startTimePdf:'.'+prettyTime(d.startTime)",index)
   self.assertNotIn("startTimePdf:'.\\u00a0'+prettyTime(d.startTime)",index)
   sw=(ROOT/'service-worker.js').read_text('utf8')
-  self.assertIn('druki-ppoz-v9',sw)
+  self.assertIn('druki-ppoz-v10',sw)
  def test_official_template(self):
   f=ROOT/'templates/noma2_blank.png'
   self.assertTrue(f.exists())

@@ -2,6 +2,8 @@ package pl.atomservice.drukippoz;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.ClipData;
+import android.content.ActivityNotFoundException;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +17,12 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import androidx.core.content.FileProvider;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.UUID;
+import java.util.Arrays;
 import org.json.JSONObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,7 +41,7 @@ public final class MainActivity extends Activity {
     private ValueCallback<Uri[]> fileCallback;
     private byte[] pendingFile;
     private String pendingMime;
-    private final ExecutorService mailExecutor = Executors.newSingleThreadExecutor();
+    private final ExecutorService shareExecutor = Executors.newSingleThreadExecutor();
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +60,10 @@ public final class MainActivity extends Activity {
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         settings.setSupportZoom(false);
         webView.addJavascriptInterface(new NativeFileBridge(),"AtomNative");
-        webView.addJavascriptInterface(new NativeMailBridge(),"AtomMail");
+        // Previous SMTP credentials are not needed for a Thunderbird handoff.
+        // This wipes only the obsolete application's encrypted password record.
+        getSharedPreferences("atom_ppoz_native_mail_v1", MODE_PRIVATE).edit().clear().apply();
+        webView.addJavascriptInterface(new NativeShareBridge(),"AtomShare");
         webView.setWebViewClient(new LocalAssetClient());
         webView.setWebChromeClient(new WebChromeClient() {
             @Override public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
@@ -143,100 +154,110 @@ public final class MainActivity extends Activity {
     }
 
 
-    /**
-     * Local-only SMTP bridge. Password is encrypted using Android Keystore,
-     * not localStorage, GitHub or an HTML/JS configuration file.
-     * Network calls are performed off the UI thread.
+    /** Prepare a read-only, short-lived private PDF attachment for Thunderbird.
+     * Android launches an email composer; the user decides whether to send.
+     * We do not and cannot claim delivery by opening the compose screen.
      */
-    private final class NativeMailBridge {
-        @JavascriptInterface public boolean isConfigured() {
-            return MailCredentialStore.isConfigured(MainActivity.this);
-        }
-
-        @JavascriptInterface public boolean savePassword(String password) {
-            try {
-                MailCredentialStore.save(MainActivity.this, password);
-                return true;
-            } catch (Exception ignored) { return false; }
-        }
-
-        @JavascriptInterface public boolean removePassword() {
-            try {
-                MailCredentialStore.clear(MainActivity.this);
-                return true;
-            } catch (Exception ignored) { return false; }
-        }
-
-        @JavascriptInterface public void inspectServer(String requestId) {
-            mailExecutor.execute(() -> {
-                try {
-                    String result = SmtpSender.inspectServer();
-                    notifyMail(requestId, "INSPECT_OK", result);
-                } catch (Exception ex) {
-                    notifyMail(requestId, "INSPECT_FAILED", mailError(ex));
-                }
-            });
-        }
-
-        @JavascriptInterface public void testConnection(String requestId) {
-            mailExecutor.execute(() -> {
-                try {
-                    String password = MailCredentialStore.load(MainActivity.this);
-                    String method = SmtpSender.testLogin(password);
-                    notifyMail(requestId, "TEST_OK", "Logowanie SMTP działa (" + method + "). Nie wysłano żadnej wiadomości.");
-                } catch (Exception ex) {
-                    notifyMail(requestId, "TEST_FAILED", mailError(ex));
-                }
-            });
-        }
-
-        @JavascriptInterface public void sendPdf(String requestId, String filename, String subject,
-                                                   String body, String pdfBase64) {
+    private final class NativeShareBridge {
+        @JavascriptInterface public void openEmail(String requestId, String filename,
+                                                   String subject, String body, String pdfBase64) {
             if (pdfBase64 == null || pdfBase64.length() > 17_000_000) {
-                notifyMail(requestId, "FAILED", "Dokument PDF jest zbyt duży.");
+                notifyShare(requestId, "FAILED", "Załącznik PDF jest zbyt duży.");
                 return;
             }
-            mailExecutor.execute(() -> {
+            shareExecutor.execute(() -> {
                 try {
-                    byte[] pdf = Base64.decode(pdfBase64, Base64.DEFAULT);
-                    String password = MailCredentialStore.load(MainActivity.this);
-                    SmtpSender.send(password, subject, body, filename, pdf);
-                    notifyMail(requestId, "SENT",
-                            "Serwer SMTP przyjął wiadomość (250). To nie jest potwierdzenie NOMA 2.");
-                } catch (SmtpSender.UnknownDelivery unknown) {
-                    notifyMail(requestId, "UNKNOWN", "Niepewny status wysyłki. Sprawdź pocztę i skontaktuj się z odbiorcą przed ponowieniem.");
+                    byte[] data = Base64.decode(pdfBase64, Base64.DEFAULT);
+                    if (data.length < 16 || data.length > 12_000_000 ||
+                            data[0]!='%' || data[1]!='P' || data[2]!='D' || data[3]!='F') {
+                        notifyShare(requestId, "FAILED", "Nieprawidłowy plik PDF.");
+                        return;
+                    }
+                    String safeName = (filename != null && filename.matches("[A-Za-z0-9_.-]{1,100}") &&
+                            filename.endsWith(".pdf")) ? filename : "NOMA2.pdf";
+                    File base = new File(getCacheDir(), "noma-mail");
+                    purgeOldShares(base);
+                    File directory = new File(base, UUID.randomUUID().toString());
+                    if (!directory.mkdirs() && !directory.isDirectory()) {
+                        throw new IOException("Nie można utworzyć prywatnego folderu PDF.");
+                    }
+                    File attachment = new File(directory, safeName);
+                    try (FileOutputStream output = new FileOutputStream(attachment)) {
+                        output.write(data);
+                    }
+                    Arrays.fill(data, (byte)0);
+                    Uri uri = FileProvider.getUriForFile(
+                            MainActivity.this, getPackageName()+".mailshare",attachment);
+                    String safeSubject = (subject == null ? "NOMA 2 - zgłoszenie" : subject)
+                            .replace('\r',' ').replace('\n',' ').trim();
+                    String safeBody = body == null ? "" : body.replace("\r", "");
+                    runOnUiThread(() -> openComposer(requestId,uri,safeName,safeSubject,safeBody));
                 } catch (Exception ex) {
-                    notifyMail(requestId, "FAILED", mailError(ex));
+                    notifyShare(requestId,"FAILED",
+                            "Nie udało się przygotować załącznika lub uruchomić poczty.");
                 }
             });
         }
     }
 
-    private String mailError(Exception ex) {
-        String name = ex.getClass().getSimpleName();
-        if (name.contains("UnknownHost") || name.contains("Connect")
-                || name.contains("SocketTimeout")) {
-            return "Brak połączenia z mail.atomservice.eu:465. Sprawdź internet lub serwer.";
+    private void openComposer(String requestId, Uri pdfUri, String fileName,
+                              String subject, String body) {
+        Intent email = new Intent(Intent.ACTION_SEND);
+        email.setType("application/pdf");
+        email.putExtra(Intent.EXTRA_EMAIL,new String[]{"sma@noma2.pl"});
+        email.putExtra(Intent.EXTRA_SUBJECT,subject);
+        email.putExtra(Intent.EXTRA_TEXT,body);
+        email.putExtra(Intent.EXTRA_STREAM,pdfUri);
+        email.setClipData(ClipData.newUri(getContentResolver(),fileName,pdfUri));
+        email.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        email.setPackage("net.thunderbird.android");
+        try {
+            startActivity(email);
+            notifyShare(requestId,"OPENED",
+                    "Otworzono Thunderbird. Sprawdź adres nadawcy, odbiorcę i PDF, a potem naciśnij Wyślij.");
+        } catch (ActivityNotFoundException missingThunderbird) {
+            // Do not pretend the message was sent; allow another compatible mail app.
+            try {
+                email.setPackage(null);
+                Intent chooser = Intent.createChooser(email,"Wybierz aplikację pocztową");
+                chooser.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(chooser);
+                notifyShare(requestId,"OPENED",
+                        "Otworzono wybór aplikacji. Wybierz Thunderbird, sprawdź treść i naciśnij Wyślij.");
+            } catch (Exception ex) {
+                notifyShare(requestId,"FAILED",
+                        "Nie znaleziono aplikacji pocztowej zdolnej odebrać załącznik PDF.");
+            }
+        } catch (Exception ex) {
+            notifyShare(requestId,"FAILED","Nie udało się otworzyć okna nowej wiadomości.");
         }
-        if (name.contains("SSL")) {
-            return "Nie udało się zestawić zweryfikowanego połączenia TLS. Sprawdź certyfikat serwera.";
-        }
-        String msg = ex.getMessage();
-        if (msg != null && (msg.contains("SMTP") || msg.contains("PDF")
-                || msg.contains("hasła") || msg.contains("logowania"))) {
-            return msg.length() > 210 ? msg.substring(0, 210) : msg;
-        }
-        return "Błąd wysyłki SMTP. Sprawdź ustawienia konta oraz połączenie internetowe.";
     }
 
-    private void notifyMail(String requestId, String status, String message) {
+    /** Clear only old cached PDFs. Keep newer files long enough for a draft
+     * composer to read its temporary content URI.
+     */
+    private void purgeOldShares(File root) {
+        File[] dirs = root.listFiles();
+        if (dirs == null) return;
+        long deadline = System.currentTimeMillis() - 48L*60*60*1000;
+        for (File folder : dirs) {
+            if (!folder.isDirectory() || folder.lastModified() >= deadline) continue;
+            File[] files = folder.listFiles();
+            if (files != null) for (File file:files) {
+                if (file.isFile()) file.delete();
+            }
+            folder.delete();
+        }
+    }
+
+    private void notifyShare(String requestId, String status, String message) {
         runOnUiThread(() -> {
             if (webView == null || isDestroyed()) return;
-            String js = "window.onNativeMailResult && window.onNativeMailResult("
+            String js = "window.onNativeShareResult && window.onNativeShareResult("
                     + JSONObject.quote(requestId == null ? "" : requestId) + ","
                     + JSONObject.quote(status) + ","
                     + JSONObject.quote(message) + ");";
-            webView.evaluateJavascript(js, null);
+            webView.evaluateJavascript(js,null);
         });
     }
 
@@ -275,7 +296,7 @@ public final class MainActivity extends Activity {
     }
     @Override protected void onDestroy() {
         if (fileCallback != null) fileCallback.onReceiveValue(null);
-        mailExecutor.shutdown();
+        shareExecutor.shutdown();
         if (webView != null) webView.destroy();
         super.onDestroy();
     }

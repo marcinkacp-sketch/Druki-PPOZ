@@ -170,20 +170,20 @@ body.home-screen .home-note{background:transparent;border:0;padding:9px 5px 0;ma
 @media(max-width:400px){.app-primary-cta{padding:12px 15px;min-height:83px}.app-shortcuts{gap:9px}.app-shortcuts button{padding:12px 9px;grid-template-columns:28px minmax(0,1fr) 11px;gap:7px;min-height:100px}.app-shortcuts button .shortcut-icon svg{width:27px;height:27px}.app-shortcuts button .shortcut-chevron{font-size:22px}}
 @media print{.home-recent{display:none!important}}
 
-/* v1.3.0: native-only SMTP controls. No changes to the official NOMA 2 paper. */
-.smtp-send-panel{margin:12px 0 0;padding:14px;border:1px solid #508ec8;background:#0e3159;border-radius:12px}
-.smtp-send-panel p{margin:0 0 10px;color:#d1e9ff;font-size:12px;line-height:1.5}
-.smtp-send-panel button{width:100%;background:linear-gradient(105deg,#067363,#119b7d);color:#fff;border:1px solid #6be1bb}
-.smtp-send-panel button:disabled{background:#3a5670;border-color:#6b8194;color:#cbddf3}
-.smtp-send-status{margin-top:8px!important}
-.smtp-settings{margin-top:15px;padding-top:15px;border-top:1px solid #426894}
-.smtp-settings h3{font-size:17px;margin:0 0 7px;color:white}
-.smtp-settings label{margin:11px 0 5px}
-.smtp-settings .smtp-fixed{background:#061e3d;border:1px solid #35699f;border-radius:9px;padding:11px;color:#e2f2ff;font-size:13px;overflow-wrap:anywhere}
-.smtp-settings .smtp-btns{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
-.smtp-settings .smtp-btns button{font-size:12px}
-.smtp-settings p{color:#bed8f3;font-size:12px;line-height:1.55}
-@media print{.smtp-settings,.smtp-send-panel{display:none!important}}
+
+/* 1.3.2: compose in Thunderbird, not automatic SMTP. Does not affect NOMA PDF. */
+.mail-send-panel{margin:12px 0 0;padding:14px;border:1px solid #508ec8;background:#0e3159;border-radius:12px}
+.mail-send-panel p{margin:0 0 10px;color:#d1e9ff;font-size:12px;line-height:1.5}
+.mail-send-panel button{width:100%;background:linear-gradient(105deg,#067363,#119b7d);color:#fff;border:1px solid #6be1bb}
+.mail-send-panel button:disabled{background:#3a5670;border-color:#6b8194;color:#cbddf3}
+.mail-send-status{margin-top:8px!important}
+.mail-settings{margin-top:15px;padding-top:15px;border-top:1px solid #426894}
+.mail-settings h3{font-size:17px;margin:0 0 7px;color:white}
+.mail-settings label{margin:11px 0 5px}
+.mail-settings .mail-fixed{background:#061e3d;border:1px solid #35699f;border-radius:9px;padding:11px;color:#e2f2ff;font-size:13px;overflow-wrap:anywhere}
+.mail-settings p{color:#bed8f3;font-size:12px;line-height:1.55}
+@media print{.mail-settings,.mail-send-panel{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -245,7 +245,7 @@ body.home-screen .home-note{background:transparent;border:0;padding:9px 5px 0;ma
    <div class="actions-row"><button type="button" class="smallbtn" id="remove-signature">Usuń podpis tej osoby</button></div>
    <p class="help">Podpis zapisuje się tylko w pamięci tej przeglądarki i automatycznie wstawia po ponownym wybraniu osoby. Nie trafia do publicznego GitHuba. Jeśli usuniesz dane przeglądarki, trzeba dodać podpis ponownie.</p>
   </section>
-  <section class="panel action-panel" data-part="export"><div class="action-buttons" style="grid-template-columns:1fr"><button id="downloadPdf" class="btn btn-primary" type="button">⬇ Pobierz PDF · 1 strona A4</button></div><div class="smtp-send-panel no-print"><p>Adresat: <strong>sma@noma2.pl</strong> · Nadawca: m.kacperski@atomservice.eu. Wysyłka tylko po Twoim potwierdzeniu; wymaga internetu.</p><button id="sendNomaPdf" class="btn" type="button" disabled>✉ Zatwierdź i wyślij PDF do NOMA 2</button><p id="smtp-send-status" class="smtp-send-status" role="status">Skonfiguruj hasło SMTP w Ustawieniach, aby aktywować wysyłkę.</p></div><p id="message" role="status" class="subline">Druk powstaje na telefonie. Sam dokument nie odłącza monitoringu — zgłoś prace operatorowi.</p><div class="actions-row" style="justify-content:center"><button id="export-data" type="button" class="smallbtn">Kopia bazy (JSON)</button><button id="import-btn" type="button" class="smallbtn">Wczytaj kopię bazy</button><input id="import-file" type="file" accept=".json,application/json" hidden></div></section>
+  <section class="panel action-panel" data-part="export"><div class="action-buttons" style="grid-template-columns:1fr"><button id="downloadPdf" class="btn btn-primary" type="button">⬇ Pobierz PDF · 1 strona A4</button></div><div class="mail-send-panel no-print"><p>Odbiorca: <strong>sma@noma2.pl</strong>. Dokument PDF zostanie dołączony do wiadomości w Thunderbirdzie. Upewnij się, że wybrano konto firmowe <strong>m.kacperski@atomservice.eu</strong>.</p><button id="sendNomaPdf" class="btn" type="button" disabled>✉ Zatwierdź i otwórz Thunderbird</button><p id="share-send-status" class="mail-send-status" role="status">Po zatwierdzeniu otworzy się program pocztowy. Wysyłka wymaga naciśnięcia „Wyślij” w Thunderbirdzie.</p></div><p id="message" role="status" class="subline">Druk powstaje na telefonie. Sam dokument nie odłącza monitoringu — zgłoś prace operatorowi.</p><div class="actions-row" style="justify-content:center"><button id="export-data" type="button" class="smallbtn">Kopia bazy (JSON)</button><button id="import-btn" type="button" class="smallbtn">Wczytaj kopię bazy</button><input id="import-file" type="file" accept=".json,application/json" hidden></div></section>
  </div>
  <section class="document-preview" data-part="preview"><div class="preview-head no-print"><h2>Podgląd gotowego druku</h2><span class="chip">Oryginalny wzór NOMA 2 · A4</span></div>
   <div class="preview"><article id="paper" class="noma-paper" aria-label="Druk zgodny z NOMA 2">
@@ -271,20 +271,18 @@ body.home-screen .home-note{background:transparent;border:0;padding:9px 5px 0;ma
 </section>
 <section class="app-special no-print" id="special-settings">
  <div class="app-special-card"><h3>Ustawienia i kopia danych</h3><p>Obiekty oraz podpisy zapisują się lokalnie w aplikacji. Kopia bazy JSON nie zawiera podpisów ani PDF. Przed odinstalowaniem aplikacji wykonaj kopię obiektów i zachowaj oryginalne obrazy podpisów.</p><button type="button" class="specialbtn" id="settings-export">Eksport bazy obiektów</button><button type="button" class="specialbtn" id="settings-import">Import bazy obiektów</button>
- <div class="smtp-settings" id="mail-settings">
-  <h3>✉ Wysyłanie zgłoszeń — NOMA 2</h3>
-  <p>Wysyłanie z firmowej skrzynki przez SMTP SSL/TLS. Hasło zapisuje się wyłącznie na tym telefonie, zaszyfrowane kluczem Android Keystore. Nie jest częścią PDF, GitHuba ani kopii bazy obiektów.</p>
-  <label>Nadawca</label><div class="smtp-fixed">m.kacperski@atomservice.eu</div>
-  <label>Serwer poczty wychodzącej</label><div class="smtp-fixed">mail.atomservice.eu · port 465 · SSL/TLS</div>
-  <label>Domyślny odbiorca</label><div class="smtp-fixed">sma@noma2.pl</div>
-  <label for="smtp-password">Hasło SMTP (lub hasło aplikacji, jeżeli wymagane)</label>
-  <input id="smtp-password" type="password" autocomplete="new-password" placeholder="Wprowadź hasło na tym telefonie" maxlength="500"/>
-  <div class="smtp-btns"><button type="button" class="specialbtn" id="smtp-save">Zapisz hasło bezpiecznie</button><button type="button" class="specialbtn" id="smtp-inspect">Sprawdź metody serwera (bez hasła)</button><button type="button" class="specialbtn" id="smtp-test">Sprawdź logowanie (bez wysyłania)</button><button type="button" class="specialbtn" id="smtp-remove">Usuń zapisane hasło</button></div>
-  <p id="smtp-setup-status" role="status">Nie skonfigurowano wysyłania.</p>
-  <p>W razie braku odpowiedzi SMTP nie ponawiaj wysyłki automatycznie — sprawdź folder Wysłane lub potwierdź z NOMA 2. Sam e-mail nie zastępuje wymaganych zgłoszeń telefonicznych.</p>
+ <div class="mail-settings" id="thunderbird-settings">
+  <h3>✉ Wysyłanie przez Thunderbird</h3>
+  <p>Druki PPOŻ tworzy podpisany PDF i otwiera gotową wiadomość w Thunderbirdzie. Nie potrzebuje hasła ani dostępu administratora poczty.</p>
+  <label>Odbiorca</label><div class="mail-fixed">sma@noma2.pl</div>
+  <label>Konto do sprawdzenia w Thunderbirdzie</label><div class="mail-fixed">m.kacperski@atomservice.eu</div>
+  <p>W nowym zgłoszeniu wybierz krok „4 · PDF” i przycisk „Zatwierdź i otwórz Thunderbird”. W Thunderbirdzie sprawdź nadawcę, odbiorcę i załącznik, a następnie naciśnij „Wyślij”.</p>
+  <p>Historia oznacza samo otwarcie wiadomości jako „Przekazano do poczty” — nie jest to potwierdzenie wysłania ani odbioru przez NOMA 2. Nadal zgłaszaj rozpoczęcie i zakończenie prac telefonicznie.</p>
+  <p>Poprzednio zapisane w Druki PPOŻ hasło SMTP zostanie usunięte przy pierwszym uruchomieniu aktualizacji.</p>
  </div>
- <p id="smtp-not-supported" style="display:none">Automatyczna wysyłka SMTP jest dostępna tylko w natywnej aplikacji Android, nie na stronie internetowej.</p>
-<p>Wersja Android 1.3.1 • Druki PPOŻ • ATOM SERWIS</p></div>
+ <p id="mail-not-supported" style="display:none">Otwieranie Thunderbirda z załącznikiem jest dostępne w aplikacji Android. Wersja internetowa nadal generuje PDF offline.</p>
+
+<p>Wersja Android 1.3.2 • Druki PPOŻ • ATOM SERWIS</p></div>
 </section>
 <section class="app-special no-print" id="special-more">
  <div class="app-special-card"><h3>Więcej możliwości</h3><div class="app-shortcuts"><button type="button" data-go="signatures"><span>✍</span>Osoby i podpisy</button><button type="button" data-go="documents"><span>▧</span>Dokumenty PDF</button><button type="button" data-go="settings"><span>⚙</span>Ustawienia</button><button type="button" data-go="objects"><span>▤</span>Moje obiekty</button></div></div>
@@ -586,7 +584,7 @@ function showAppScreen(screen,step=appStep){
  $('special-more').style.display=screen==='more'?'block':'none';
  document.querySelectorAll('.app-bottom-nav button').forEach(b=>{let wanted=home?'home':screen==='request'?'request':'settings';b.classList.toggle('selected',b.dataset.screen===wanted)});
  if(screen==='documents')renderDocumentHistory();
- if(screen==='settings'||screen==='request'&&appStep===3)mailState();
+ if(screen==='settings'||screen==='request'&&appStep===3)shareState();
  if(shown.includes('preview'))requestAnimationFrame(()=>{refreshPreview();fitAllFields()});
  window.scrollTo({top:0,behavior:'instant'});
 }
@@ -598,143 +596,88 @@ function setupAppTabs(){
  $('step-next').addEventListener('click',()=>appStep===3?downloadPdf():showAppScreen('request',appStep+1));
  $('settings-export').addEventListener('click',()=>document.getElementById('export-data').click());
  $('settings-import').addEventListener('click',()=>document.getElementById('import-btn').click());
- $('smtp-save').addEventListener('click',saveSmtpPassword);
- $('smtp-remove').addEventListener('click',removeSmtpPassword);
- $('smtp-inspect').addEventListener('click',inspectSmtpServer);
- $('smtp-test').addEventListener('click',testSmtpConnection);
- $('sendNomaPdf').addEventListener('click',sendNomaEmail);
+ $('sendNomaPdf').addEventListener('click',openNomaInThunderbird);
  showAppScreen('home',0);
- mailState();
+ shareState();
 }
 
-/* SMTP w natywnym Androidzie. Dane logowania nigdy nie trafiają do localStorage. */
-let mailPending=null;
-function nativeMailAvailable(){
- return !!(window.AtomMail && typeof window.AtomMail.isConfigured==='function');
+/* Android 1.3.2: hand-off to the installed email composer (no SMTP password). */
+let sharePending=null;
+function nativeShareAvailable(){
+ return !!(window.AtomShare && typeof window.AtomShare.openEmail==='function');
 }
-function mailState(){
- const native=nativeMailAvailable();
- let configured=false;
- try{configured=native&&window.AtomMail.isConfigured();}catch(_){}
- if($('mail-settings'))$('mail-settings').style.display=native?'':'none';
- if($('smtp-not-supported'))$('smtp-not-supported').style.display=native?'none':'';
- const send=$('sendNomaPdf');
- if(send)send.disabled=!configured||!!mailPending||exportingPdf;
- const status=$('smtp-setup-status');
- if(status&&native&&!mailPending)status.textContent=configured?
-  'Hasło jest zabezpieczone na tym telefonie. Wykonaj test logowania przed pierwszą wysyłką.':
-  'Brak hasła SMTP. Wpisz hasło swojej skrzynki i zapisz je w bezpiecznym magazynie Androida.';
- const sendStatus=$('smtp-send-status');
- if(sendStatus&&!mailPending&&(!configured||!native))
-  sendStatus.textContent=native?'Najpierw zapisz hasło SMTP w Ustawieniach.':
-   'Automatyczna wysyłka działa wyłącznie w aplikacji Android.';
+function shareState(){
+ const native=nativeShareAvailable();
+ const btn=$('sendNomaPdf');
+ if(btn)btn.disabled=!native||!!sharePending||exportingPdf;
+ if($('thunderbird-settings'))$('thunderbird-settings').style.display=native?'':'none';
+ if($('mail-not-supported'))$('mail-not-supported').style.display=native?'none':'';
+ if(!native&&!sharePending&&$('share-send-status')){
+   $('share-send-status').textContent='Przekazanie PDF do Thunderbirda działa w aplikacji Android, a nie na stronie internetowej.';
+ }
 }
-function mailRequestId(){return 'smtp-'+Date.now()+'-'+Math.random().toString(36).slice(2,9);}
-function saveSmtpPassword(){
- if(!nativeMailAvailable())return;
- const field=$('smtp-password');
- if(!field.value){$('smtp-setup-status').textContent='Wpisz hasło SMTP.';return;}
- const saved=window.AtomMail.savePassword(field.value);
- field.value='';
- $('smtp-setup-status').textContent=saved?'Hasło zapisano w Android Keystore. Teraz sprawdź logowanie.':
-   'Nie udało się bezpiecznie zapisać hasła. Spróbuj ponownie.';
- mailState();
-}
-function removeSmtpPassword(){
- if(!nativeMailAvailable())return;
- if(!confirm('Usunąć zapisane hasło SMTP z tego telefonu?'))return;
- const ok=window.AtomMail.removePassword();
- $('smtp-password').value='';
- mailState();
- $('smtp-setup-status').textContent=ok?'Hasło SMTP zostało usunięte.':
-  'Nie udało się usunąć hasła SMTP.';
-}
-function inspectSmtpServer(){
- if(!nativeMailAvailable()||mailPending)return;
- const id=mailRequestId();
- mailPending={id:id,type:'inspect'};
- $('smtp-inspect').disabled=true;
- $('smtp-setup-status').textContent='Sprawdzam szyfrowane połączenie i dostępne metody SMTP — bez hasła.';
- window.AtomMail.inspectServer(id);
- mailState();
-}
-function testSmtpConnection(){
- if(!nativeMailAvailable()||!window.AtomMail.isConfigured()){mailState();return;}
- if(mailPending)return;
- const id=mailRequestId();
- mailPending={id:id,type:'test'};
- $('smtp-test').disabled=true;
- $('smtp-setup-status').textContent='Sprawdzam szyfrowane połączenie i logowanie...';
- window.AtomMail.testConnection(id);
- mailState();
-}
-function pdfBase64(blob){return new Promise((resolve,reject)=>{
+function sharePdfBase64(blob){return new Promise((resolve,reject)=>{
  const reader=new FileReader();
- reader.onerror=()=>reject(Error('Nie można odczytać gotowego PDF.'));
- reader.onload=()=>{const data=String(reader.result||'').split(',')[1];
-  if(data)resolve(data);else reject(Error('Błąd przygotowania PDF.'));};
+ reader.onerror=()=>reject(Error('Nie można odczytać wygenerowanego PDF.'));
+ reader.onload=()=>{
+  const data=String(reader.result||'').split(',')[1];
+  if(data)resolve(data);else reject(Error('Błąd przygotowania załącznika PDF.'));
+ };
  reader.readAsDataURL(blob);
 });}
-async function sendNomaEmail(){
- if(mailPending||exportingPdf)return;
- if(!nativeMailAvailable()||!window.AtomMail.isConfigured()){
-  $('smtp-send-status').textContent='Najpierw skonfiguruj SMTP w Ustawieniach.';
+async function openNomaInThunderbird(){
+ if(sharePending||exportingPdf)return;
+ if(!nativeShareAvailable()){
+  $('share-send-status').textContent='Ta funkcja wymaga aplikacji Druki PPOŻ na Androida.';
   return;
  }
  const d=validate();if(!d)return;
- const title='NOMA 2 - czasowe odłączenie monitoringu - '+d.siteName;
- const notice='Dzień dobry,\n\nW załączeniu przesyłam zgłoszenie czasowego odłączenia monitoringu pożarowego.\n'
-   +'\nObiekt: '+d.siteName+'\nAdres: '+d.street+', '+d.city
-   +'\nOd: '+d.startDate+' godz. '+d.startTime
-   +'\nDo: '+d.endDate+' godz. '+d.endTime
-   +'\n\nZ poważaniem,\nAtom Serwis';
- const confirmText='Czy na pewno wysłać podpisany PDF z konta m.kacperski@atomservice.eu na sma@noma2.pl?\n'
-   +'\nObiekt: '+d.siteName
-   +'\nOd: '+d.startDate+' '+d.startTime+'\nDo: '+d.endDate+' '+d.endTime
-   +'\n\nPo potwierdzeniu wiadomość zostanie wysłana. Nie będzie drugiego okna programu pocztowego.';
+ const signatureMissing=!personSignatures[currentSignerKey()];
+ const warning=signatureMissing?
+  '\nUWAGA: Brak zapisanego obrazu podpisu osoby podpisującej. Sprawdź podgląd dokumentu.':'';
+ const confirmText='Przygotować wiadomość w Thunderbirdzie?\n\n'
+  +'Odbiorca: sma@noma2.pl\n'
+  +'Konto nadawcy do sprawdzenia: m.kacperski@atomservice.eu\n'
+  +'Obiekt: '+d.siteName+'\n'
+  +'Od: '+d.startDate+' godz. '+d.startTime+'\n'
+  +'Do: '+d.endDate+' godz. '+d.endTime
+  +warning+'\n\nWyślesz ją dopiero po naciśnięciu „Wyślij” w Thunderbirdzie.';
  if(!confirm(confirmText))return;
- const id=mailRequestId();
+ const title='NOMA 2 - czasowe odłączenie monitoringu - '+d.siteName;
+ const message='Dzień dobry,\n\nW załączeniu przesyłam zgłoszenie czasowego odłączenia monitoringu pożarowego.\n'
+  +'\nObiekt: '+d.siteName+'\nAdres: '+d.street+', '+d.city
+  +'\nOd: '+d.startDate+' godz. '+d.startTime
+  +'\nDo: '+d.endDate+' godz. '+d.endTime
+  +'\n\nZ poważaniem,\nAtom Serwis';
  const filename='NOMA2_'+slug(d.siteName)+'_'+d.startDate+'.pdf';
- mailPending={id:id,type:'send',data:d,filename:filename};
- $('smtp-send-status').textContent='Przygotowuję PDF do wysłania. Nie zamykaj aplikacji.';
- mailState();
+ const id='share-'+Date.now()+'-'+Math.random().toString(36).slice(2,8);
+ sharePending={id,data:d,filename};
+ $('share-send-status').textContent='Tworzę załącznik PDF dla Thunderbirda…';
+ shareState();
  try {
-  const canvas=await makePdfCanvas();
-  const pdf=pdfFromCanvas(canvas);
-  if(pdf.size>12_000_000)throw Error('PDF ma więcej niż 12 MB.');
-  const b64=await pdfBase64(pdf);
-  $('smtp-send-status').textContent='Łączę się bezpiecznie z SMTP i wysyłam PDF. Nie zamykaj aplikacji.';
-  window.AtomMail.sendPdf(id,filename,title,notice,b64);
- }catch(error){
-  mailPending=null;
-  $('smtp-send-status').textContent='Nie wysłano: '+(error&&error.message||'Błąd przygotowania PDF.');
-  mailState();
+   const canvas=await makePdfCanvas();
+   const pdf=pdfFromCanvas(canvas);
+   if(pdf.size>12_000_000)throw Error('Załącznik PDF przekracza 12 MB.');
+   const b64=await sharePdfBase64(pdf);
+   window.AtomShare.openEmail(id,filename,title,message,b64);
+ }catch(ex){
+   sharePending=null;
+   shareState();
+   $('share-send-status').textContent='Nie udało się przygotować wiadomości: '+(ex&&ex.message||String(ex));
  }
 }
-window.onNativeMailResult=function(id,result,details){
- if(!mailPending||id!==mailPending.id)return;
- const current=mailPending;
- mailPending=null;
- if(current.type==='inspect'){
-  $('smtp-inspect').disabled=false;
-  mailState();
-  $('smtp-setup-status').textContent=details;
-  return;
- }
- if(current.type==='test'){
-  $('smtp-test').disabled=false;
-  mailState();
-  $('smtp-setup-status').textContent=details;
-  return;
- }
- if(current.type==='send'){
-  const status=result==='SENT'?'Wysłano do serwera SMTP':
-    result==='UNKNOWN'?'Status wysyłki niepewny':'Błąd wysyłki';
-  addDocumentHistory(current.filename,current.data,status);
-  $('smtp-send-status').textContent=status+'. '+details;
+window.onNativeShareResult=function(id,status,message){
+ if(!sharePending||sharePending.id!==id)return;
+ const current=sharePending;
+ sharePending=null;
+ shareState();
+ if(status==='OPENED'){
+  addDocumentHistory(current.filename,current.data,'Przekazano do poczty — wysyłka niepotwierdzona');
+  $('share-send-status').textContent=message+' Status wysyłki pozostaje niepotwierdzony.';
   if(appScreen==='documents')renderDocumentHistory();
   if(appScreen==='home')renderHomeRecent();
-  mailState();
+ }else{
+  $('share-send-status').textContent=message||'Nie udało się otworzyć poczty.';
  }
 };
 

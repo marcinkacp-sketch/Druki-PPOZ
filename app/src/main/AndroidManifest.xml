@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Internet is used only for SMTP/TLS after the user confirms sending. HTML/assets and PDF rendering work offline. -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- No internet permission: only Thunderbird handles network email delivery. -->
+    <queries><package android:name="net.thunderbird.android" /></queries>
     <application
         android:allowBackup="false"
         android:label="Druki PPOŻ — Atom Serwis"
@@ -10,6 +10,15 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:usesCleartextTraffic="false">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.mailshare"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/noma_mail_paths" />
+        </provider>
         <activity
             android:name=".MainActivity"
             android:exported="true"
