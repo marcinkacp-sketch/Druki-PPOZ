@@ -58,7 +58,7 @@ textarea{resize:vertical;min-height:60px}.twocol{display:grid;grid-template-colu
  .header,.panels,.preview-head,.footer{display:none!important}
  body,html{margin:0!important;padding:0!important;background:#fff!important}
  .layout,.document-preview,.preview{margin:0!important;padding:0!important;display:block!important;max-width:none!important;max-height:none!important;overflow:visible!important}
- #paper.noma-paper{position:relative!important;display:block!important;width:210mm!important;height:297mm!important;max-width:none!important;min-height:0!important;aspect-ratio:auto!important;box-shadow:none!important;margin:0!important;padding:0!important;border:0!important;overflow:hidden!important;page-break-inside:avoid!important;break-inside:avoid!important}
+ #paper.noma-paper{position:relative!important;display:block!important;width:209.5mm!important;height:296.5mm!important;max-width:none!important;min-height:0!important;aspect-ratio:auto!important;box-shadow:none!important;margin:0!important;padding:0!important;border:0!important;overflow:hidden!important;page-break-inside:avoid!important;break-inside:avoid!important}
 }
 
 </style>
@@ -93,7 +93,7 @@ textarea{resize:vertical;min-height:60px}.twocol{display:grid;grid-template-colu
    <div class="actions-row"><button type="button" class="smallbtn" id="remove-signature">Usuń podpis tej osoby</button></div>
    <p class="help">Podpis zapisuje się tylko w pamięci tej przeglądarki i automatycznie wstawia po ponownym wybraniu osoby. Nie trafia do publicznego GitHuba. Jeśli usuniesz dane przeglądarki, trzeba dodać podpis ponownie.</p>
   </section>
-  <section class="panel action-panel"><div class="action-buttons" style="grid-template-columns:1fr"><button id="printPdf" class="btn btn-primary" type="button">▣ Druk NOMA 2 — zapisz PDF</button></div><p id="message" role="status" class="subline">Druk powstaje na telefonie. Sam dokument nie odłącza monitoringu — zgłoś prace operatorowi.</p><div class="actions-row" style="justify-content:center"><button id="export-data" type="button" class="smallbtn">Kopia bazy (JSON)</button><button id="import-btn" type="button" class="smallbtn">Wczytaj kopię bazy</button><input id="import-file" type="file" accept=".json,application/json" hidden></div></section>
+  <section class="panel action-panel"><div class="action-buttons" style="grid-template-columns:1fr"><button id="downloadPdf" class="btn btn-primary" type="button">⬇ Pobierz PDF · 1 strona A4</button></div><p id="message" role="status" class="subline">Druk powstaje na telefonie. Sam dokument nie odłącza monitoringu — zgłoś prace operatorowi.</p><div class="actions-row" style="justify-content:center"><button id="export-data" type="button" class="smallbtn">Kopia bazy (JSON)</button><button id="import-btn" type="button" class="smallbtn">Wczytaj kopię bazy</button><input id="import-file" type="file" accept=".json,application/json" hidden></div></section>
  </div>
  <section class="document-preview"><div class="preview-head no-print"><h2>Podgląd gotowego druku</h2><span class="chip">Oryginalny wzór NOMA 2 · A4</span></div>
   <div class="preview"><article id="paper" class="noma-paper" aria-label="Druk zgodny z NOMA 2">
@@ -158,7 +158,7 @@ function fitAllFields(){
    if(!fontSize||!el.clientWidth)return;
    ctx.font=`${computed.fontWeight} ${fontSize}px ${computed.fontFamily}`;
    const text=el.textContent||'';const measured=ctx.measureText(text).width;
-   if(measured>el.clientWidth-1)el.style.fontSize=(fontSize*Math.max(.55,(el.clientWidth-2)/measured))+'px';
+   if(measured>el.clientWidth-1)el.style.fontSize=(fontSize*Math.max(.35,(el.clientWidth-2)/measured))+'px';
  });
 }
 function setMessage(msg,problem=false){$('message').textContent=msg;$('message').style.color=problem?'#ad3427':'#59718c';}
@@ -169,7 +169,98 @@ function validate(){const d=getFields();const required=[['siteName','nazwę obie
 }
 function slug(str){return normalize(str).replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,45)||'obiekt';}
 function downloadBlob(blob,filename){const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
-function printPdf(){if(!validate())return;const bg=document.querySelector('.noma-base');if(!bg?.complete||!bg.naturalWidth){setMessage('Wzór NOMA 2 jeszcze się nie załadował. Sprawdź połączenie lub odśwież.',true);return;}fitAllFields();setMessage('W oknie drukowania wybierz „Zapisz jako PDF”. Sprawdź podgląd jednej strony A4.');window.print();}
+// Bezpośredni eksport PDF: renderowanie oficjalnego wzoru NOMA 2 z dynamicznymi
+// polami na kanwie A4, bez uruchamiania okna drukowania. Jeden obraz = jedna strona.
+async function makePdfCanvas(){
+ const paper=$('paper'), bg=paper.querySelector('.noma-base');
+ if(!bg.complete || !bg.naturalWidth)throw Error('Oryginalny wzór NOMA 2 nie jest gotowy. Odśwież stronę.');
+ if(document.fonts?.ready)await document.fonts.ready;
+ // Na wąskich ekranach wszystkie elementy nadal mają te same pozycje procentowe.
+ fitAllFields();
+ const w=bg.naturalWidth,h=bg.naturalHeight;
+ const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+ const ctx=canvas.getContext('2d',{alpha:false});
+ if(!ctx)throw Error('Nie można utworzyć dokumentu na tym urządzeniu.');
+ ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+ ctx.drawImage(bg,0,0,w,h);
+ const paperRect=paper.getBoundingClientRect(),sx=w/paperRect.width,sy=h/paperRect.height;
+ for(const field of paper.querySelectorAll('.noma-field')){
+  const value=(field.textContent||'').trim();if(!value)continue;
+  const rect=field.getBoundingClientRect(),css=getComputedStyle(field);
+  const left=(rect.left-paperRect.left)*sx,top=(rect.top-paperRect.top)*sy;
+  const maxWidth=rect.width*sx,maxHeight=rect.height*sy;
+  let size=parseFloat(css.fontSize)*sx;
+  const family=css.fontFamily || 'serif';
+  const weight=css.fontWeight || '400';
+  ctx.save();ctx.beginPath();ctx.rect(left,top,maxWidth,maxHeight);ctx.clip();
+  ctx.textAlign=css.textAlign==='center'?'center':css.textAlign==='right'?'right':'left';
+  ctx.textBaseline='alphabetic';ctx.fillStyle='#000';
+  ctx.font=`${weight} ${size}px ${family}`;
+  let measure=ctx.measureText(value).width;
+  if(measure>maxWidth-2){size=size*(maxWidth-3)/measure;ctx.font=`${weight} ${size}px ${family}`;}
+  const x=ctx.textAlign==='center'?left+maxWidth/2:ctx.textAlign==='right'?left+maxWidth:left;
+  // Kontener CSS ma line-height 1.05/1.1. Pozycjonujemy tekst jak w podglądzie.
+  const lineHeight=parseFloat(css.lineHeight)*sy||size*1.1;
+  const baseline=top+Math.min(maxHeight,size+(lineHeight-size)/2);
+  ctx.fillText(value,x,baseline);
+  ctx.restore();
+ }
+ const signature=$('signature-on-paper');
+ if(signature.style.display!=='none'&&signature.getAttribute('src')){
+  try{
+   if(!signature.complete)await signature.decode();
+   if(signature.naturalWidth&&signature.naturalHeight){
+    const rect=signature.getBoundingClientRect();const x=(rect.left-paperRect.left)*sx,y=(rect.top-paperRect.top)*sy;
+    const bw=rect.width*sx,bh=rect.height*sy;
+    const ratio=Math.min(bw/signature.naturalWidth,bh/signature.naturalHeight);
+    const iw=signature.naturalWidth*ratio,ih=signature.naturalHeight*ratio;
+    ctx.save();ctx.globalCompositeOperation='multiply';
+    ctx.drawImage(signature,x+(bw-iw)/2,y+(bh-ih)/2,iw,ih);
+    ctx.restore();
+   }
+  }catch(e){throw Error('Nie udało się dodać zapisanego podpisu. Wgraj go ponownie.');}
+ }
+ return canvas;
+}
+// Minimalna otwarta implementacja jednorazowego, jednostronicowego PDF z
+// obrazem JPEG. Polski tekst jest zapisany w grafice; nie wymaga sieci ani
+// zewnętrznego serwera/serwisu. MediaBox: 595 × 841 pt jak oryginał NOMA 2.
+function pdfFromCanvas(canvas){
+ const data=canvas.toDataURL('image/jpeg',0.96).split(',')[1];
+ const jpeg=Uint8Array.from(atob(data),c=>c.charCodeAt(0));
+ const encoder=new TextEncoder();const parts=[];let length=0,offsets=[0];
+ const addText=s=>addBytes(encoder.encode(s));
+ const addBytes=bytes=>{parts.push(bytes);length+=bytes.length;};
+ const begin=n=>{offsets[n]=length;addText(`${n} 0 obj\n`);};
+ const end=()=>addText('endobj\n');
+ addText('%PDF-1.4\n%\xC2\xA5\xC2\xB6\n');
+ begin(1);addText('<< /Type /Catalog /Pages 2 0 R >>\n');end();
+ begin(2);addText('<< /Type /Pages /Kids [3 0 R] /Count 1 >>\n');end();
+ begin(3);addText('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 841] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>\n');end();
+ begin(4);addText(`<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);
+ addBytes(jpeg);addText('\nendstream\n');end();
+ const stream='q\n595 0 0 841 0 0 cm\n/Im0 Do\nQ\n';
+ begin(5);addText(`<< /Length ${encoder.encode(stream).length} >>\nstream\n${stream}endstream\n`);end();
+ const xref=length;
+ addText('xref\n0 6\n0000000000 65535 f \n');
+ for(let n=1;n<=5;n++)addText(String(offsets[n]).padStart(10,'0')+' 00000 n \n');
+ addText(`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+ return new Blob(parts,{type:'application/pdf'});
+}
+let exportingPdf=false;
+async function downloadPdf(){
+ const d=validate();if(!d||exportingPdf)return;
+ const button=$('downloadPdf');exportingPdf=true;button.disabled=true;
+ const label=button.textContent;button.textContent='Tworzenie PDF…';
+ try{
+  const canvas=await makePdfCanvas();
+  const pdf=pdfFromCanvas(canvas);
+  const filename=`NOMA2_${slug(d.siteName)}_${d.startDate}.pdf`;
+  downloadBlob(pdf,filename);
+  setMessage('PDF pobrany bez drukowania: 1 strona A4 ('+(Math.round(pdf.size/1024))+' kB).');
+ }catch(e){setMessage('Nie udało się utworzyć PDF: '+(e?.message||String(e)),true);}
+ finally{exportingPdf=false;button.disabled=false;button.textContent=label;}
+}
 function saveObject(){const d=getFields();if(!d.siteName){setMessage('Najpierw wpisz nazwę obiektu.',true);return;}const id=settings.selected;const entry={id:id&&allObjects().some(x=>x.id===id)?id:'local-'+Date.now(),name:d.siteName,city:d.city,street:d.street,source:'',needsReview:!(d.city&&d.street)};
  if(id&&INCLUDED_OBJECTS.some(x=>x.id===id))settings.overrides[id]=entry;
  else{const pos=settings.custom.findIndex(x=>x.id===entry.id);if(pos>=0)settings.custom[pos]=entry;else settings.custom.push(entry);}settings.selected=entry.id;persist();showResults();setMessage('Zapisano dane obiektu na tym urządzeniu.');}
@@ -247,10 +338,10 @@ function init(){const now=new Date();
  const presets=$('contactPreset');CONTACTS.forEach((x,i)=>{const opt=document.createElement('option');opt.value=String(i);opt.textContent=x.name+' · '+x.phone;presets.appendChild(opt)});const extra=document.createElement('option');extra.value='other';extra.textContent='Inna osoba (wpisz ręcznie)';presets.appendChild(extra);
  function applyContact(){const chosen=CONTACTS[Number(presets.value)];if(chosen){$('contactName').value=chosen.name;$('contactPhone').value=chosen.phone;$('signer').value=chosen.name;}refreshPreview();}presets.addEventListener('change',applyContact);applyContact();
  document.querySelectorAll('input,textarea,select').forEach(el=>{if(el.id!=='search')el.addEventListener('input',refreshPreview)});
- $('search').addEventListener('input',showResults);$('new-site').addEventListener('click',newObject);$('save-site').addEventListener('click',saveObject);$('signature-file').addEventListener('change',importPersonSignature);$('remove-signature').addEventListener('click',removePersonSignature);$('printPdf').addEventListener('click',printPdf);$('export-data').addEventListener('click',downloadBackup);$('import-btn').addEventListener('click',()=>$('import-file').click());$('import-file').addEventListener('change',importBackup);
+ $('search').addEventListener('input',showResults);$('new-site').addEventListener('click',newObject);$('save-site').addEventListener('click',saveObject);$('signature-file').addEventListener('change',importPersonSignature);$('remove-signature').addEventListener('click',removePersonSignature);$('downloadPdf').addEventListener('click',downloadPdf);$('export-data').addEventListener('click',downloadBackup);$('import-btn').addEventListener('click',()=>$('import-file').click());$('import-file').addEventListener('change',importBackup);
  choose(allObjects().some(x=>x.id===settings.selected)?settings.selected:'word-104');
  // Funkcje testowe do automatycznej weryfikacji z użyciem przeglądarki, bez sieci.
- window.__drukiTest={allObjects,getFields,prettyDate,prettyTime,validate,signatureKey,displaySavedSignature};
+ window.__drukiTest={allObjects,getFields,prettyDate,prettyTime,validate,signatureKey,displaySavedSignature,makePdfCanvas,pdfFromCanvas};
 }
 init();
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {

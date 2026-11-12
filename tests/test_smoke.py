@@ -22,7 +22,7 @@ class TestDrukiPPOZ(unittest.TestCase):
    self.assertTrue((ROOT/icon['src']).exists())
  def test_generated_page(self):
   index=(ROOT/'index.html').read_text('utf8')
-  for needle in ['INCLUDED_OBJECTS','noma2_blank.png','signature-file','signatureKey','currentSignerKey','startDate','startTime','printPdf']:
+  for needle in ['INCLUDED_OBJECTS','noma2_blank.png','signature-file','signatureKey','currentSignerKey','startDate','startTime','downloadPdf','pdfFromCanvas','Pobierz PDF']:
    self.assertIn(needle,index)
   self.assertNotIn('Pobierz Word (.docx)',index)
 if __name__=='__main__':unittest.main()

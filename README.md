@@ -12,14 +12,14 @@ Aplikacja PWA na telefon (Android / Chrome) do przygotowania wniosku o **czasowe
 - **Przypisuje podpis do osoby**, np. Marcin Kacperski. W sekcji kontaktu wybierz podpisującego, a następnie prześlij PNG/JPG/WebP albo Word DOCX zawierający **dokładnie jeden** obraz. Obraz zostanie zapisany na tym urządzeniu. Następnym razem podpis pojawi się automatycznie po wybraniu tej osoby; działa również, gdy imię i nazwisko wpisane są w odwrotnej kolejności.
 - Pozwala usunąć i wymienić podpis osoby. **Obrazy podpisów nigdy nie są wgrywane do repozytorium ani do GitHub Pages.** Trzymane są w `localStorage` tylko w danej przeglądarce pod adresem strony; wyczyszczenie danych strony usuwa je, a instalacja innej przeglądarki nie przejmuje podpisów.
 - Pozwala dodawać i poprawiać obiekty oraz eksportować bazę obiektów do JSON. **Eksport bazy nie obejmuje zapisanych podpisów.**
-- Drukuje do PDF z dialogu przeglądarki: przycisk **„Druk NOMA 2 — zapisz PDF”** → „Zapisz jako PDF”, format A4, jedna strona. Generator Worda o innym układzie został wycofany, aby nie pomylić go z formularzem operatora.
+- Tworzy **bezpośrednio jednostronicowy plik PDF A4** za pomocą przycisku „Pobierz PDF · 1 strona A4”, bez otwierania okna drukowania. Generator Worda o innym układzie został wycofany, aby nie pomylić go z formularzem operatora.
 
 ## Uruchamianie na Androidzie
 
 1. Otwórz `https://marcinkacp-sketch.github.io/Druki-PPOZ/` w Google Chrome.
 2. W menu Chrome wybierz **Zainstaluj aplikację** / **Dodaj do ekranu głównego**.
 3. Wpisz godziny, wybierz obiekt i osobę. Wczytaj podpis tej osoby tylko raz, jeśli ma być automatycznie umieszczany w kolejnych drukach.
-4. Wybierz PDF i sprawdź wizualnie cały wydruk przed wysłaniem.
+4. Kliknij **Pobierz PDF**, otwórz pobrany plik i sprawdź jego wygląd przed wysłaniem.
 
 Po pierwszym otwarciu strona może działać offline dzięki Service Worker. Obiekty i podpisy przechowują się lokalnie; bez instalacji odrębnego serwera bazodanowego.
 
@@ -40,3 +40,9 @@ Po zmianach: `python scripts/build.py`, sprawdź wydruk i zwiększ wersję `CACH
 Sam wydruk **nie powoduje odłączenia monitoringu i nie wysyła powiadomienia do NOMA 2**. Przed użyciem trzeba sprawdzić aktualność danych, właściwą jednostkę PSP, okres odłączenia i procedury operatora, a także potwierdzić, czy NOMA 2 dopuszcza taką formę podpisu w przesyłanym wniosku. Umieszczenie obrazu podpisu nie nadaje samo z siebie dokumentowi statusu kwalifikowanego podpisu elektronicznego.
 
 **Uwaga:** repozytorium GitHub jest publiczne. Nie umieszczaj pliku z rzeczywistym podpisem, skanu dokumentu z podpisem ani wypełnionych druków w kodzie repozytorium.
+
+## Bezpośredni eksport PDF
+
+Przycisk **Pobierz PDF · 1 strona A4** generuje jeden arkusz PDF (595 × 841 pkt) bez okna drukowania i bez serwera. Dane są rysowane na bazie nieruchomego tła oryginalnego formularza NOMA 2. Podpis jest pobierany z pamięci bieżącej przeglądarki i nie jest publikowany w repozytorium. PDF zawiera rasteryzowany obraz całej strony, dlatego tekst nie jest selekcjonowalny.
+
+Jeżeli aplikacja była już instalowana, zamknij ją i otwórz ponownie, aby pobrać nowszą wersję PWA (cache `druki-ppoz-v3`).
