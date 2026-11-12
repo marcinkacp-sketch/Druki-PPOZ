@@ -15,6 +15,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import org.json.JSONObject;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,6 +33,7 @@ public final class MainActivity extends Activity {
     private ValueCallback<Uri[]> fileCallback;
     private byte[] pendingFile;
     private String pendingMime;
+    private final ExecutorService mailExecutor = Executors.newSingleThreadExecutor();
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +52,7 @@ public final class MainActivity extends Activity {
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         settings.setSupportZoom(false);
         webView.addJavascriptInterface(new NativeFileBridge(),"AtomNative");
+        webView.addJavascriptInterface(new NativeMailBridge(),"AtomMail");
         webView.setWebViewClient(new LocalAssetClient());
         webView.setWebChromeClient(new WebChromeClient() {
             @Override public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
@@ -136,6 +142,93 @@ public final class MainActivity extends Activity {
         }
     }
 
+
+    /**
+     * Local-only SMTP bridge. Password is encrypted using Android Keystore,
+     * not localStorage, GitHub or an HTML/JS configuration file.
+     * Network calls are performed off the UI thread.
+     */
+    private final class NativeMailBridge {
+        @JavascriptInterface public boolean isConfigured() {
+            return MailCredentialStore.isConfigured(MainActivity.this);
+        }
+
+        @JavascriptInterface public boolean savePassword(String password) {
+            try {
+                MailCredentialStore.save(MainActivity.this, password);
+                return true;
+            } catch (Exception ignored) { return false; }
+        }
+
+        @JavascriptInterface public boolean removePassword() {
+            try {
+                MailCredentialStore.clear(MainActivity.this);
+                return true;
+            } catch (Exception ignored) { return false; }
+        }
+
+        @JavascriptInterface public void testConnection(String requestId) {
+            mailExecutor.execute(() -> {
+                try {
+                    String password = MailCredentialStore.load(MainActivity.this);
+                    SmtpSender.testLogin(password);
+                    notifyMail(requestId, "TEST_OK", "Logowanie SMTP działa. Nie wysłano żadnej wiadomości.");
+                } catch (Exception ex) {
+                    notifyMail(requestId, "TEST_FAILED", mailError(ex));
+                }
+            });
+        }
+
+        @JavascriptInterface public void sendPdf(String requestId, String filename, String subject,
+                                                   String body, String pdfBase64) {
+            if (pdfBase64 == null || pdfBase64.length() > 17_000_000) {
+                notifyMail(requestId, "FAILED", "Dokument PDF jest zbyt duży.");
+                return;
+            }
+            mailExecutor.execute(() -> {
+                try {
+                    byte[] pdf = Base64.decode(pdfBase64, Base64.DEFAULT);
+                    String password = MailCredentialStore.load(MainActivity.this);
+                    SmtpSender.send(password, subject, body, filename, pdf);
+                    notifyMail(requestId, "SENT",
+                            "Serwer SMTP przyjął wiadomość (250). To nie jest potwierdzenie NOMA 2.");
+                } catch (SmtpSender.UnknownDelivery unknown) {
+                    notifyMail(requestId, "UNKNOWN", "Niepewny status wysyłki. Sprawdź pocztę i skontaktuj się z odbiorcą przed ponowieniem.");
+                } catch (Exception ex) {
+                    notifyMail(requestId, "FAILED", mailError(ex));
+                }
+            });
+        }
+    }
+
+    private String mailError(Exception ex) {
+        String name = ex.getClass().getSimpleName();
+        if (name.contains("UnknownHost") || name.contains("Connect")
+                || name.contains("SocketTimeout")) {
+            return "Brak połączenia z mail.atomservice.eu:465. Sprawdź internet lub serwer.";
+        }
+        if (name.contains("SSL")) {
+            return "Nie udało się zestawić zweryfikowanego połączenia TLS. Sprawdź certyfikat serwera.";
+        }
+        String msg = ex.getMessage();
+        if (msg != null && (msg.contains("SMTP") || msg.contains("PDF")
+                || msg.contains("hasła") || msg.contains("logowania"))) {
+            return msg.length() > 210 ? msg.substring(0, 210) : msg;
+        }
+        return "Błąd wysyłki SMTP. Sprawdź ustawienia konta oraz połączenie internetowe.";
+    }
+
+    private void notifyMail(String requestId, String status, String message) {
+        runOnUiThread(() -> {
+            if (webView == null || isDestroyed()) return;
+            String js = "window.onNativeMailResult && window.onNativeMailResult("
+                    + JSONObject.quote(requestId == null ? "" : requestId) + ","
+                    + JSONObject.quote(status) + ","
+                    + JSONObject.quote(message) + ");";
+            webView.evaluateJavascript(js, null);
+        });
+    }
+
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent result) {
         super.onActivityResult(requestCode,resultCode,result);
         if (requestCode == REQUEST_PICK) {
@@ -171,6 +264,7 @@ public final class MainActivity extends Activity {
     }
     @Override protected void onDestroy() {
         if (fileCallback != null) fileCallback.onReceiveValue(null);
+        mailExecutor.shutdown();
         if (webView != null) webView.destroy();
         super.onDestroy();
     }

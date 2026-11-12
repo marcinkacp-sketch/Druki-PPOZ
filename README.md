@@ -75,3 +75,38 @@ W Androidzie `versionCode=3`, `versionName=1.2.0`. Klucz z pierwszego diagnostyc
 Cztery pola daty i godziny mają tę samą czcionkę o kroju zwężonym, tę samą wielkość i wspólną linię bazową z nadrukiem „od dnia / godz. / do dnia / godz.”. Usunięto osobne zmniejszanie pierwszej godziny i dodatkową spację po „godz.”. Skorygowano pozycję pionową, nie modyfikując stałych elementów formularza NOMA 2.
 
 `versionCode=4`, `versionName=1.2.1`, cache PWA `druki-ppoz-v7`. Wydania podpisane stałym kluczem wspierają przyszłe aktualizacje przez instalowanie nowszego APK **z tym samym certyfikatem**. Zmiana z podpisu debug na podpis release **nie działa jako aktualizacja w miejscu**; najpierw eksportuj kopię bazy, zabezpiecz źródłowy obraz podpisu i PDF, potem odinstaluj testową aplikację i zainstaluj release, importując bazę i podpis.
+
+
+## Android 1.3.0 — wysyłka zgłoszenia SMTP po zatwierdzeniu
+
+W natywnej aplikacji Android (nie w wersji PWA) dodano wysyłanie gotowego,
+jednostronicowego PDF NOMA 2 bez otwierania klienta poczty.
+
+- Nadawca: `m.kacperski@atomservice.eu`.
+- Serwer SMTP: `mail.atomservice.eu`, port **465**, SSL/TLS.
+- Domyślny i jedyny odbiorca w tym wydaniu: `sma@noma2.pl`.
+- Połączenie używa Androidowego magazynu zaufanych certyfikatów, z weryfikacją
+  nazwy serwera; nie akceptuje błędnych certyfikatów.
+- Hasło podaje się **tylko w Androidzie**: Ustawienia → Wysyłanie zgłoszeń.
+  W Android Keystore przechowywany jest klucz AES-256; zaszyfrowane hasło
+  znajduje się w prywatnych SharedPreferences aplikacji. Hasła nie przechowuje
+  strona ani GitHub i nie zawiera go kopia JSON obiektów.
+- „Sprawdź logowanie” testuje szyfrowane połączenie i uwierzytelnienie,
+  **bez wysyłania wiadomości**.
+- „Zatwierdź i wyślij PDF” jest dostępne po konfiguracji SMTP, pokazuje
+  potwierdzenie z odbiorcą i obiektem, i wysyła dopiero po wyraźnym kliknięciu.
+- Historia rejestruje rezultat po odpowiedzi serwera. Status „Wysłano do
+  serwera SMTP” oznacza akceptację SMTP (kod 250), **nie** doręczenie ani
+  przyjęcie zgłoszenia przez NOMA 2.
+- Jeśli odpowiedź SMTP po wysłaniu treści zaginie, aplikacja pokazuje
+  **niepewny status** zamiast automatycznie wysyłać drugi raz (ryzyko duplikatu).
+- Generowanie PDF i baza obiektów pozostają offline. Internet jest niezbędny
+  wyłącznie w trakcie SMTP.
+- Sama wysyłka maila nie zastępuje telefonicznego powiadomienia operatora
+  zgodnie z formularzem.
+
+**Granice testów:** kompilacja Androida i testy statyczne nie dowodzą, że
+rzeczywiste konto SMTP akceptuje hasło. Test logowania i pierwszą próbę
+wysyłki należy wykonać na urządzeniu właściciela, za jego zgodą. W szczególności
+nie wysyłamy automatycznie prawdziwych zgłoszeń z testów CI. Thunderbird może
+nadal obsługiwać tę skrzynkę niezależnie.

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- The app uses bundled assets only; no INTERNET permission by design. -->
+    <!-- Internet is used only for SMTP/TLS after the user confirms sending. HTML/assets and PDF rendering work offline. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="false"
         android:label="Druki PPOŻ — Atom Serwis"

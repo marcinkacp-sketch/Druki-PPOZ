@@ -37,7 +37,7 @@ jobs:
           sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
       - name: Offline source checks
         run: |
-          python -m unittest discover -s tests -p 'test_smoke.py'
+          python -m unittest discover -s tests -p 'test_*.py'
           test -s app/src/main/assets/index.html
           grep -q 'app-bottom-nav' app/src/main/assets/index.html
           grep -q 'addDocumentHistory' app/src/main/assets/index.html
