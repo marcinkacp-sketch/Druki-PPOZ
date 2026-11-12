@@ -1,3 +1,4 @@
+# Test podpisywania po dodaniu czterech sekretów (bez publikowania wartości).
 name: Android APK - Druki PPOZ
 on:
   push:
