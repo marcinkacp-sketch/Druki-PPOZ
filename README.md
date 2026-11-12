@@ -63,3 +63,9 @@ Ekran Start pokazuje osobne kafelki: **Nowe zgłoszenie**, **Moje obiekty**, **O
 Historia PDF to lista nazw i dat lokalnych wygenerowań — rzeczywiste PDF zapisuje się w wybranym przez użytkownika folderze Androida. Brak automatycznej wysyłki do operatora. Baza 73 obiektów i podpisy pozostają lokalne.
 
 **Podpisywanie aktualizacji:** pierwszy diagnostyczny APK był podpisany tymczasowym kluczem debug. Został przygotowany osobny stały klucz wydania, ale aktywacja zautomatyzowanych podpisanych wydań wymaga ustawienia sekretów GitHub. Do czasu tej konfiguracji workflow publikuje tylko testowy APK. Patrz `ANDROID-INSTRUKCJA.md`. Nigdy nie dodawaj plików klucza ani danych podpisu do publicznego repozytorium.
+
+## Android 1.2.0 — ekran Start według makiety nr 2
+
+Ekran Start wykorzystuje grafikę ATOM SERWIS, motyw niebiesko-czerwony i czerwony wóz strażacki z drugiego zatwierdzonego projektu graficznego. Pod nim jest duży przycisk „Nowe zgłoszenie NOMA 2”, cztery niezależne kafelki funkcji, lokalna historia zgłoszeń oraz dolna nawigacja Start / Nowe zgłoszenie / Ustawienia. Historia pokazuje wyłącznie rzeczywiste lokalne nazwy ostatnio utworzonych dokumentów (nie przykładowe dane demonstracyjne); pliki są w folderze wybranym w systemowym oknie zapisu Androida. Formularz i PDF NOMA 2 pozostają niezmienione.
+
+W Androidzie `versionCode=3`, `versionName=1.2.0`. Klucz z pierwszego diagnostycznego APK nie jest stałym kluczem wydania. Do bezstratnych przyszłych aktualizacji należy skonfigurować wszystkie cztery sekrety `PPOZ_KEYSTORE_*` w ustawieniach GitHub i korzystać wyłącznie z wydań o tej samej sygnaturze. Przed przejściem z APK debug na wersję release konieczne może być odinstalowanie dotychczasowej aplikacji, co usuwa jej lokalne dane.

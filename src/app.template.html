@@ -127,31 +127,71 @@ body{padding-bottom:84px}
 .app-layout-single .noma-paper{max-width:595px}
 @media(max-width:520px){.app-home{margin-top:11px;padding:0 12px}.app-shortcuts{gap:9px}.app-shortcuts button{min-height:106px;padding:14px}.app-screen-title,.app-stepbar,.app-step-nav,.app-special{padding-left:12px;padding-right:12px}.app-layout-single{padding:12px}.app-primary-cta{font-size:18px}}
 @media print{.app-bottom-nav,.app-home,.app-screen-title,.app-stepbar,.app-step-nav,.app-special{display:none!important}.layout{display:block!important} .document-preview,.preview{display:block!important}}
+
+/* ATOM SERWIS v1.2 — ekran Start zgodny z drugą zatwierdzoną grafiką.
+   Grafika i kolory dotyczą UI. Dokument NOMA 2 nie jest modyfikowany. */
+body.home-screen{background:linear-gradient(176deg,#061b3d 0%,#08244b 42%,#061731 100%)}
+body.home-screen .header{display:none!important}
+body.home-screen .fire-hero{max-width:780px;min-height:0;display:block;overflow:hidden;border:0;border-radius:0;margin:0 auto;box-shadow:none;background:transparent}
+.fire-hero:before{display:none}
+.hero-reference-2{display:block;width:100%;height:auto;object-fit:contain}
+body.home-screen .app-home{margin-top:0;max-width:780px;padding:0 15px}
+.app-primary-cta{background:linear-gradient(118deg,#a6000f 2%,#e4162c 56%,#a60019 100%);border:1px solid #ff7982;border-radius:21px;box-shadow:0 11px 20px #e0233355, inset 0 1px 2px #ffb2a670;min-height:90px;justify-content:flex-start;gap:13px;padding:15px 20px;margin:0 0 12px}
+.app-primary-cta .big{display:grid;place-items:center;width:56px;height:64px;border-right:1px solid #ffbbc4;padding-right:12px;flex:none}
+.app-primary-cta svg{width:46px;height:46px}
+.app-primary-cta .cta-copy{display:grid;gap:0;line-height:1.07;white-space:nowrap;font-size:clamp(18px,4.4vw,27px)}
+.app-primary-cta .cta-copy strong{font-weight:950;font-size:clamp(29px,8vw,45px)}
+.app-primary-cta .cta-arrow{margin-left:auto;font-size:30px;font-weight:700}
+.app-shortcuts{gap:12px}
+.app-shortcuts button{display:grid;grid-template-columns:39px minmax(0,1fr) 14px;align-items:center;gap:10px;text-align:left;padding:15px 13px;min-height:104px;background:linear-gradient(155deg,#0b5089,#093662 58%,#082751);border:1.5px solid #46b2fa;border-radius:19px;box-shadow:inset 0 1px 7px #2db0fd36,0 9px 14px #0004;font-size:clamp(12px,3.5vw,16px)}
+.app-shortcuts button .shortcut-icon{display:grid;place-items:center;margin:0}
+.app-shortcuts button .shortcut-icon svg{width:33px;height:33px;stroke-width:1.9}
+.app-shortcuts button .shortcut-text{display:block;margin:0;font-size:clamp(12px,3.5vw,17px);font-weight:780;line-height:1.25;overflow-wrap:anywhere}
+.app-shortcuts button .shortcut-chevron{font-size:27px;text-align:right;margin:0;color:#e1f6ff}
+.home-recent{margin:21px 0 5px;background:linear-gradient(140deg,#103863,#092247);border-radius:22px;padding:17px 12px 13px;border:1px solid #1f5281;box-shadow:0 10px 23px #0003}
+.recent-heading{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:0 3px 10px}
+.home-recent .recent-heading h2{font-size:18px;font-weight:850;margin:0}
+.recent-heading h2 span{color:#f34258;font-size:27px;vertical-align:middle;margin-right:4px}
+.recent-heading button{background:none;border:none;color:#edf7ff;font-weight:700;font-size:12px;white-space:nowrap;padding:8px 2px}
+.home-recent-list{display:grid;gap:0;border:1px solid #326ca0;border-radius:16px;overflow:hidden;background:#061e3c}
+.recent-row{display:flex;align-items:center;gap:14px;padding:14px 12px;min-width:0}
+.recent-row+.recent-row{border-top:1px solid #2a537f}
+.recent-pdf-icon{font-size:12px;display:grid;place-items:center;color:#fff;background:#ed3043;border-radius:5px;width:40px;height:44px;flex-shrink:0;font-weight:950;border:2px solid #dbeeff}
+.recent-info{min-width:0;flex:1}
+.recent-info strong{display:block;font-size:13px;line-height:1.3;overflow-wrap:anywhere}
+.recent-info small{display:block;color:#a9c7e7;margin-top:4px;font-size:12px}
+.recent-note,.recent-empty{margin:0;padding:10px 13px;color:#a6c2de;line-height:1.4;font-size:12px}
+body.home-screen .home-note{background:transparent;border:0;padding:9px 5px 0;margin:10px 0;color:#a6c2df;font-size:11px}
+.app-bottom-nav{grid-template-columns:repeat(3,minmax(0,1fr));min-height:67px;border-top:2px solid #fe374e;background:linear-gradient(180deg,#062247,#061633);padding:6px max(5px,env(safe-area-inset-left)) max(7px,env(safe-area-inset-bottom))}
+.app-bottom-nav button{gap:4px;font-size:11px;padding:5px}
+.app-bottom-nav button svg{width:27px;height:27px}
+.app-bottom-nav button span{font-size:11px}
+.app-bottom-nav button.selected{background:transparent;border:0;color:#ff576b}
+@media(max-width:400px){.app-primary-cta{padding:12px 15px;min-height:83px}.app-shortcuts{gap:9px}.app-shortcuts button{padding:12px 9px;grid-template-columns:28px minmax(0,1fr) 11px;gap:7px;min-height:100px}.app-shortcuts button .shortcut-icon svg{width:27px;height:27px}.app-shortcuts button .shortcut-chevron{font-size:22px}}
+@media print{.home-recent{display:none!important}}
 </style>
 </head>
 <body>
 <header class="header no-print"><div class="brand"><div class="logo"><img src="./icons/atom-app-icon.png" alt="Symbol aplikacji Atom Serwis"></div><div><h1><span class="brand-atom">ATOM</span> SERWIS <span class="brand-small">/ Druki PPOŻ</span></h1><p>Stacja Monitoringu Alarmów Pożarowych · NOMA 2</p></div></div><span class="offline">● Offline</span></header>
-<section class="fire-hero no-print" aria-label="Atom Serwis — monitorowanie alarmów pożarowych">
- <div class="hero-copy"><div class="hero-kicker">ATOMSERVICE <span>•</span> MONITORING PPOŻ</div><strong>NOMA <em>2</em></strong><p>Zgłoszenie czasowego odłączenia obiektu od monitoringu pożarowego</p><div class="hero-disclaimer">Wygeneruj oficjalny druk i przekaż go operatorowi</div></div>
- <img class="firetruck-art" src="./graphics/firetruck.webp" alt="Czerwony samochód straży pożarnej" loading="eager">
+<section class="fire-hero no-print" aria-label="ATOM SERWIS — Monitoring PPOŻ, zgłoszenia do stacji monitoringu alarmów pożarowych">
+ <img class="hero-reference-2" src="./graphics/hero-reference-2.webp" alt="Atom Serwis — Monitoring PPOŻ. Czerwony wóz strażacki i stacja monitoringu alarmów pożarowych." loading="eager">
 </section>
 
 <nav class="app-bottom-nav no-print" aria-label="Nawigacja aplikacji">
- <button type="button" data-screen="home" class="selected"><span>⌂</span>Start</button>
- <button type="button" data-screen="request"><span>✚</span>Zgłoszenie</button>
- <button type="button" data-screen="objects"><span>▤</span>Obiekty</button>
- <button type="button" data-screen="more"><span>⚙</span>Więcej</button>
+ <button type="button" data-screen="home" class="selected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Start</span></button>
+ <button type="button" data-screen="request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 7v10M7 12h10"/></svg><span>Nowe zgłoszenie</span></button>
+ <button type="button" data-screen="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .2.2 1.3 1.1-2 3.4-1.7-.5a8 8 0 0 1-2 .9L14.9 22h-4l-.3-1.9a8 8 0 0 1-2-.9l-1.8.5-2-3.4L6.2 15a9 9 0 0 1 0-2l-1.4-1.4 2-3.4 1.8.5a8 8 0 0 1 2-.9L10.9 6h4l.3 1.8a8 8 0 0 1 2 .9l1.7-.5 2 3.4-1.3 1.1a9 9 0 0 1 0 2z" transform="translate(0 -2) scale(1 .95)"/></svg><span>Ustawienia</span></button>
 </nav>
 <section id="app-home" class="app-home no-print" aria-label="Ekran startowy">
- <h2>Monitoring PPOŻ</h2><p>Wnioski o czasowe odłączenie obiektu od monitoringu pożarowego NOMA 2.</p>
- <button type="button" class="app-primary-cta" data-go="request" data-step="0"><span class="big">📄</span><span>Nowe zgłoszenie<br><small>Oficjalny druk NOMA 2</small></span><span>❯</span></button>
+ <button type="button" class="app-primary-cta" data-go="request" data-step="0"><span class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2h10l5 5v15H5z"/><path d="M15 2v5h5M9 12h7M9 16h7"/><path d="M4 17 2 20h6"/></svg></span><span class="cta-copy"><span>Nowe zgłoszenie</span><strong>NOMA 2</strong></span><span class="cta-arrow">❯</span></button>
  <div class="app-shortcuts">
-  <button type="button" data-go="objects"><span>▤</span>Moje obiekty</button>
-  <button type="button" data-go="signatures"><span>✍</span>Osoby i podpisy</button>
-  <button type="button" data-go="documents"><span>▧</span>Dokumenty PDF</button>
-  <button type="button" data-go="settings"><span>⚙</span>Ustawienia</button>
+  <button type="button" data-go="objects"><span class="shortcut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7 12 3l9 4-9 4zM3 12l9 4 9-4M3 17l9 4 9-4"/></svg></span><span class="shortcut-text">Moje<br>obiekty</span><span class="shortcut-chevron">›</span></button>
+  <button type="button" data-go="signatures"><span class="shortcut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 22v-3c0-4 3.6-6 8-6s8 2 8 6v3"/></svg></span><span class="shortcut-text">Osoby<br>i podpisy</span><span class="shortcut-chevron">›</span></button>
+  <button type="button" data-go="documents"><span class="shortcut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span><span class="shortcut-text">Zapisane<br>dokumenty PDF</span><span class="shortcut-chevron">›</span></button>
+  <button type="button" data-go="settings"><span class="shortcut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .2.2 1.3 1.1-2 3.4-1.7-.5a8 8 0 0 1-2 .9L14.9 22h-4l-.3-1.9a8 8 0 0 1-2-.9l-1.8.5-2-3.4L6.2 15a9 9 0 0 1 0-2l-1.4-1.4 2-3.4 1.8.5a8 8 0 0 1 2-.9L10.9 6h4l.3 1.8a8 8 0 0 1 2 .9l1.7-.5 2 3.4-1.3 1.1a9 9 0 0 1 0 2z" transform="translate(0 -2) scale(1 .95)"/></svg></span><span class="shortcut-text">Ustawienia<br>aplikacji</span><span class="shortcut-chevron">›</span></button>
  </div>
- <p class="home-note">Działa bez internetu. PDF zostaje na Twoim telefonie. Pamiętaj o zgłoszeniu rozpoczęcia i zakończenia prac do operatora.</p>
+ <section class="home-recent" aria-label="Ostatnie zgłoszenia"><div class="recent-heading"><h2><span aria-hidden="true">◴</span> Ostatnie zgłoszenia</h2><button type="button" data-go="documents">Wszystkie ›</button></div><div id="home-recent-list" class="home-recent-list"></div></section>
+ <p class="home-note">Druki są przygotowywane offline. Zapisz PDF na telefonie i przekaż go do NOMA 2. O rozpoczęciu i zakończeniu prac poinformuj operatora telefonicznie.</p>
 </section>
 <div class="app-screen-title no-print" id="screen-title"><div><h2 id="screen-heading"></h2><p id="screen-description"></p></div><button type="button" data-go="home">⌂ Start</button></div>
 <div id="app-stepbar" class="app-stepbar no-print" aria-label="Etapy zgłoszenia">
@@ -495,7 +535,9 @@ function showAppScreen(screen,step=appStep){
  appScreen=screen;appStep=Math.min(3,Math.max(0,Number(step)||0));
  const home=screen==='home',isRequest=screen==='request';
  $('app-home').style.display=home?'block':'none';
+ document.body.classList.toggle('home-screen',home);
  document.querySelector('.fire-hero').style.display=home?'':'none';
+ if(home)renderHomeRecent();
  const title=$('screen-title');title.style.display=home?'none':'flex';
  $('screen-heading').textContent=isRequest?APP_STEPS[appStep]:({objects:'Moje obiekty',signatures:'Osoby i podpisy',documents:'Dokumenty PDF',settings:'Ustawienia',more:'Więcej'})[screen]||'';
  $('screen-description').textContent=screenDescriptions[screen]||'';
@@ -513,7 +555,7 @@ function showAppScreen(screen,step=appStep){
  $('special-documents').style.display=screen==='documents'?'block':'none';
  $('special-settings').style.display=screen==='settings'?'block':'none';
  $('special-more').style.display=screen==='more'?'block':'none';
- document.querySelectorAll('.app-bottom-nav button').forEach(b=>{let wanted=screen==='request'?'request':screen==='objects'?'objects':home?'home':'more';b.classList.toggle('selected',b.dataset.screen===wanted)});
+ document.querySelectorAll('.app-bottom-nav button').forEach(b=>{let wanted=home?'home':screen==='request'?'request':'settings';b.classList.toggle('selected',b.dataset.screen===wanted)});
  if(screen==='documents')renderDocumentHistory();
  if(shown.includes('preview'))requestAnimationFrame(()=>{refreshPreview();fitAllFields()});
  window.scrollTo({top:0,behavior:'instant'});
@@ -534,6 +576,21 @@ function addDocumentHistory(filename,d){
  entries.unshift({name:filename,site:d.siteName,date:d.startDate,created:new Date().toLocaleString('pl-PL')});
  localStorage.setItem(HISTORY_KEY,JSON.stringify(entries.slice(0,30)));
  }catch(e){}
+}
+function renderHomeRecent(){
+ const el=$('home-recent-list');if(!el)return;
+ let records=[];try{records=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');}catch(e){}
+ el.replaceChildren();
+ if(!Array.isArray(records)||records.length===0){const empty=document.createElement('p');empty.className='recent-empty';empty.textContent='Nie masz jeszcze przygotowanych wniosków. Wybierz „Nowe zgłoszenie”, aby utworzyć pierwszy PDF.';el.appendChild(empty);return;}
+ for(const record of records.slice(0,3)){
+  const line=document.createElement('div');line.className='recent-row';
+  const icon=document.createElement('span');icon.className='recent-pdf-icon';icon.textContent='PDF';
+  const info=document.createElement('div');info.className='recent-info';
+  const name=document.createElement('strong');name.textContent=record.name||'Wniosek NOMA 2';
+  const meta=document.createElement('small');meta.textContent=record.created||record.date||'';
+  info.append(name,meta);line.append(icon,info);el.appendChild(line);
+ }
+ const note=document.createElement('small');note.className='recent-note';note.textContent='Lista dokumentów jest historią zgłoszeń; zapisane PDF-y znajdziesz w wybranym folderze telefonu.';el.append(note);
 }
 function renderDocumentHistory(){
  const el=$('document-history');let list=[];try{list=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')}catch(e){}

@@ -4,7 +4,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 class TestAndroidPackage(unittest.TestCase):
     def test_packaged_assets_match_web(self):
-        for path in ('index.html','templates/noma2_blank.png','graphics/firetruck.webp','icons/atom-app-icon.png'):
+        for path in ('index.html','templates/noma2_blank.png','graphics/firetruck.webp','graphics/hero-reference-2.webp','icons/atom-app-icon.png'):
             self.assertEqual((ROOT/path).read_bytes(),(ROOT/'app/src/main/assets'/path).read_bytes(),path)
     def test_no_cloud_access(self):
         manifest=(ROOT/'app/src/main/AndroidManifest.xml').read_text(encoding='utf-8')
@@ -17,7 +17,7 @@ class TestAndroidPackage(unittest.TestCase):
     def test_page_and_native_bridge(self):
         html=(ROOT/'index.html').read_text(encoding='utf-8')
         self.assertIn('window.AtomNative.saveFileBase64(',html)
-        self.assertIn('firetruck.webp',html)
+        self.assertIn('hero-reference-2.webp',html)
         self.assertIn('ATOM',html)
         self.assertIn('makePdfCanvas()',html)
         self.assertIn('pdfFromCanvas(',html)

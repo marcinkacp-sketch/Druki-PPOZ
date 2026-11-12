@@ -10,10 +10,10 @@ class TestDrukiPPOZ(unittest.TestCase):
   self.assertTrue(all(o.get('name') for o in objects))
  def test_tabs_and_android_version(self):
   index=(ROOT/'app/src/main/assets/index.html').read_text('utf8')
-  for token in ['app-bottom-nav','setupAppTabs','data-screen="home"','data-screen="request"','data-screen="objects"','data-part="signatures"','document-history','addDocumentHistory']:
+  for token in ['app-bottom-nav','setupAppTabs','data-screen="home"','data-screen="request"','data-go="objects"','data-part="signatures"','home-recent-list','hero-reference-2.webp','document-history','addDocumentHistory']:
    self.assertIn(token,index)
   gradle=(ROOT/'app/build.gradle.kts').read_text('utf8')
-  self.assertIn('versionCode = 2',gradle)
+  self.assertIn('versionCode = 3',gradle)
   self.assertIn('stableRelease',gradle)
  def test_official_template(self):
   f=ROOT/'templates/noma2_blank.png'
