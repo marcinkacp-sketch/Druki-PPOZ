@@ -31,7 +31,7 @@ class TestAndroidPackage(unittest.TestCase):
             self.assertNotIn(forbidden,java)
         gradle=(ROOT/'app/build.gradle.kts').read_text('utf-8')
         self.assertIn('androidx.core:core:1.15.0',gradle)
-        self.assertIn('versionCode = 7',gradle)
+        self.assertIn('versionCode = 8',gradle)
     def test_page_and_native_bridge(self):
         html=(ROOT/'index.html').read_text(encoding='utf-8')
         self.assertIn('window.AtomNative.saveFileBase64(',html)

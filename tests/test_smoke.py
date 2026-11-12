@@ -13,9 +13,9 @@ class TestDrukiPPOZ(unittest.TestCase):
   for token in ['app-bottom-nav','setupAppTabs','data-screen="home"','data-screen="request"','data-go="objects"','data-part="signatures"','home-recent-list','hero-reference-2.webp','document-history','addDocumentHistory']:
    self.assertIn(token,index)
   gradle=(ROOT/'app/build.gradle.kts').read_text('utf8')
-  self.assertIn('versionCode = 7',gradle)
+  self.assertIn('versionCode = 8',gradle)
   self.assertIn('stableRelease',gradle)
-  self.assertIn('versionName = "1.3.2"',gradle)
+  self.assertIn('versionName = "1.3.3"',gradle)
  def test_thunderbird_share_with_confirmation(self):
   index=(ROOT/'app/src/main/assets/index.html').read_text('utf8')
   for token in ('id="sendNomaPdf"','Zatwierdź i otwórz Thunderbird',
@@ -38,11 +38,25 @@ class TestDrukiPPOZ(unittest.TestCase):
    positions.append(m.group(1))
   self.assertEqual(len(set(positions)),1,positions)
   self.assertIn('sans-serif-condensed',index)
-  self.assertIn('.noma-field.start-time{font-size:2.03cqw}',index)
-  self.assertIn("startTimePdf:'.'+prettyTime(d.startTime)",index)
-  self.assertNotIn("startTimePdf:'.\\u00a0'+prettyTime(d.startTime)",index)
+  self.assertIn('.noma-field.datetime-time{font-size:1.85cqw}',index)
+  self.assertIn("startTimePdf:'. '+prettyTime(d.startTime)",index)
+  self.assertIn('startDatePdf:prettyDate(d.startDate),endDatePdf:prettyDate(d.endDate)',index)
+  self.assertNotIn("startDatePdf:prettyDate(d.startDate)+' r.'",index)
+  self.assertNotIn("startTimePdf:'.'+prettyTime(d.startTime)",index)
+  # Reserve space around fixed words "godz" and "do dnia" in NOMA template.
+  boxes={}
+  for field in fields:
+   m=re.search(r'<span class="([^"]+)" data-out="'+field+r'" style="left:([0-9.]+)%;top:([0-9.]+)%;width:([0-9.]+)%;',index)
+   self.assertIsNotNone(m,field)
+   boxes[field]=(m.group(1),float(m.group(2)),float(m.group(3)),float(m.group(4)))
+  self.assertIn('datetime-time',boxes['startTimePdf'][0])
+  self.assertIn('datetime-time',boxes['endTimePdf'][0])
+  self.assertLessEqual(boxes['startDatePdf'][1]+boxes['startDatePdf'][3],26.8)
+  self.assertLessEqual(boxes['startTimePdf'][1]+boxes['startTimePdf'][3],36.86)
+  self.assertLessEqual(boxes['endDatePdf'][1]+boxes['endDatePdf'][3],56.95)
+  self.assertGreaterEqual(boxes['endTimePdf'][1],63.0)
   sw=(ROOT/'service-worker.js').read_text('utf8')
-  self.assertIn('druki-ppoz-v10',sw)
+  self.assertIn('druki-ppoz-v11',sw)
  def test_official_template(self):
   f=ROOT/'templates/noma2_blank.png'
   self.assertTrue(f.exists())

@@ -151,3 +151,18 @@ Wysłanie zgłoszenia NOMA 2 nadal wymaga sprawdzenia wiadomości i naciśnięci
 Przy aktualizacji stabilnie podpisanej wersji 1.3.1 na 1.3.2 zachowywane są
 lokalne obiekty i podpisy; nie należy odinstalowywać aplikacji. Nie wysyłamy
 żadnych zgłoszeń do NOMA 2 podczas testów CI.
+
+
+## Android 1.3.3 — odstępy na druku NOMA 2
+
+- W pojedynczym wierszu formularza oddzielono dynamiczne daty i godziny od
+  istniejących na oryginalnym wzorze słów „od dnia”, „godz”, „do dnia” i „godz.”.
+- Wyświetlane daty mają postać `dd.mm.rrrr` bez dodatkowego `r.`, ponieważ
+  na wzorze pola są krótkie; nie zmieniono grafiki oryginalnego formularza.
+- Pierwsza godzina jest zapisywana jako `. 8.00` (z odstępem po kropce), aby
+  razem z nadrukowanym „godz” dać „godz. 8.00”. Drugie pole pozostaje samą
+  godziną, ponieważ oryginał zawiera już „godz.”.
+- Obie godziny mają tę samą rodzinę i wielkość fontu; ograniczono ich pola,
+  aby tekst nie wchodził na nadruk „do dnia” ani na koniec „godz.”.
+- Oficjalna grafika tła i działające przekazanie PDF do Thunderbirda
+  pozostały niezmienione. Jest to aktualizacja podpisana tym samym kluczem.
