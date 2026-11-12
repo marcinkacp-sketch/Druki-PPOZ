@@ -9,6 +9,7 @@ Aplikacja PWA na telefon (Android / Chrome) do przygotowania wniosku o **czasowe
 - Wyszukuje obiekt już po pierwszych literach jego nazwy, miejscowości lub ulicy; wypełnia nazwę, ulicę i miasto. Baza początkowa: 73 obiekty z przesłanego Worda. Niektóre adresy są niepełne i wymagają weryfikacji.
 - Obie daty automatycznie ustawia na bieżący dzień według telefonu. Godziny rozpoczęcia i zakończenia użytkownik podaje ręcznie. Waliduje kolejność dat i godzin.
 - Wypełnia w oryginalnym formularzu NOMA 2: rodzaj prac, obiekt, ulicę, miasto, miejscowość PSP, daty/godziny, drugą osobę kontaktową i telefon, imię i nazwisko podpisującego oraz — jeżeli zapisano — obraz podpisu.
+- Odmienia miejscowości w miejscowniku po słowie **„w”** (np. **Gliwice → Gliwicach**, **Katowice → Katowicach**). Zapisany adres pozostaje w formie podstawowej. Obie formy na wniosku (miejscowość obiektu i PSP) można niezależnie poprawić. Gdy nazwa nie jest znana aplikacji, ręczne uzupełnienie odmiany jest obowiązkowe.
 - **Przypisuje podpis do osoby**, np. Marcin Kacperski. W sekcji kontaktu wybierz podpisującego, a następnie prześlij PNG/JPG/WebP albo Word DOCX zawierający **dokładnie jeden** obraz. Obraz zostanie zapisany na tym urządzeniu. Następnym razem podpis pojawi się automatycznie po wybraniu tej osoby; działa również, gdy imię i nazwisko wpisane są w odwrotnej kolejności.
 - Pozwala usunąć i wymienić podpis osoby. **Obrazy podpisów nigdy nie są wgrywane do repozytorium ani do GitHub Pages.** Trzymane są w `localStorage` tylko w danej przeglądarce pod adresem strony; wyczyszczenie danych strony usuwa je, a instalacja innej przeglądarki nie przejmuje podpisów.
 - Pozwala dodawać i poprawiać obiekty oraz eksportować bazę obiektów do JSON. **Eksport bazy nie obejmuje zapisanych podpisów.**
@@ -45,4 +46,4 @@ Sam wydruk **nie powoduje odłączenia monitoringu i nie wysyła powiadomienia d
 
 Przycisk **Pobierz PDF · 1 strona A4** generuje jeden arkusz PDF (595 × 841 pkt) bez okna drukowania i bez serwera. Dane są rysowane na bazie nieruchomego tła oryginalnego formularza NOMA 2. Podpis jest pobierany z pamięci bieżącej przeglądarki i nie jest publikowany w repozytorium. PDF zawiera rasteryzowany obraz całej strony, dlatego tekst nie jest selekcjonowalny.
 
-Jeżeli aplikacja była już instalowana, zamknij ją i otwórz ponownie, aby pobrać nowszą wersję PWA (cache `druki-ppoz-v3`).
+Jeżeli aplikacja była już instalowana, zamknij ją i otwórz ponownie, aby pobrać nowszą wersję PWA (cache `druki-ppoz-v4`).

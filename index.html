@@ -45,7 +45,8 @@ textarea{resize:vertical;min-height:60px}.twocol{display:grid;grid-template-colu
 .noma-paper{position:relative!important;display:block!important;width:100%!important;max-width:595px!important;aspect-ratio:595/841!important;min-height:0!important;margin:auto!important;padding:0!important;overflow:hidden!important;background:white!important;container-type:inline-size;box-shadow:0 9px 35px #263a5940}
 .noma-base{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:fill}
 .noma-field{position:absolute;display:block;overflow:hidden;white-space:nowrap;line-height:1.05;font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:2.35cqw;color:#000;text-align:left}
-.noma-field.small{font-family:Arial,Helvetica,sans-serif;font-size:2.0cqw;font-weight:700;line-height:1.1}
+.noma-field.small{font-family:Arial,Helvetica,sans-serif;font-size:1.91cqw;font-weight:700;line-height:1.1}
+.noma-field.start-time{font-size:1.72cqw}
 .noma-field.signer{font-size:2.68cqw;font-family:Georgia,'Times New Roman',serif;font-weight:400;text-align:center}
 .noma-field.center{text-align:center}
 .noma-signature{position:absolute;display:none;object-fit:contain;object-position:center;mix-blend-mode:multiply}
@@ -77,6 +78,8 @@ textarea{resize:vertical;min-height:60px}.twocol{display:grid;grid-template-colu
    <div class="field"><label for="siteName">Nazwa obiektu *</label><textarea id="siteName" rows="2" required></textarea></div>
    <div class="twocol"><div class="field"><label for="street">Ulica i numer *</label><input id="street" required></div><div class="field"><label for="city">Miejscowość *</label><input id="city" required></div></div>
    <div class="twocol"><div class="field"><label for="pspCity">Miejscowość PSP *</label><input id="pspCity" required></div><div class="field"><label for="works">Rodzaj prac *</label><input id="works" placeholder="konserwacyjnymi" required></div></div>
+   <div class="twocol"><div class="field"><label for="cityLocative">Na druku: „w…” (obiekt) *</label><input id="cityLocative" required placeholder="np. Gliwicach"></div><div class="field"><label for="pspCityLocative">Na druku: PSP „w…” *</label><input id="pspCityLocative" required placeholder="np. Gliwicach"></div></div>
+   <p class="help">Miasta odmieniają się automatycznie: Gliwice → Gliwicach, Katowice → Katowicach. Dla nieznanych nazw uzupełnij odmianę samodzielnie. W bazie obiektów pozostaje forma podstawowa.</p>
    <div id="data-warning" class="notice">Przed wygenerowaniem sprawdź nazwę, adres oraz właściwą miejscowość PSP.</div>
   </section>
   <section class="panel"><div class="panel-head"><span class="index">3</span><h2>Termin odłączenia</h2></div>
@@ -101,10 +104,10 @@ textarea{resize:vertical;min-height:60px}.twocol{display:grid;grid-template-colu
    <span class="noma-field" data-out="works" style="left:33.32773%;top:22.94887%;width:62.35294%;height:2.02140%;"></span>
    <span class="noma-field" data-out="siteName" style="left:13.09244%;top:26.18312%;width:82.52101%;height:1.96195%;"></span>
    <span class="noma-field" data-out="street" style="left:13.09244%;top:32.34245%;width:44.70588%;height:1.90250%;"></span>
-   <span class="noma-field" data-out="city" style="left:61.88235%;top:32.34245%;width:33.78151%;height:1.90250%;"></span>
-   <span class="noma-field center" data-out="pspCity" style="left:2.35294%;top:39.03686%;width:93.27731%;height:1.90250%;"></span>
+   <span class="noma-field" data-out="cityLocative" style="left:61.88235%;top:32.34245%;width:33.78151%;height:1.90250%;"></span>
+   <span class="noma-field center" data-out="pspCityLocative" style="left:2.35294%;top:39.03686%;width:93.27731%;height:1.90250%;"></span>
    <span class="noma-field small" data-out="startDatePdf" style="left:14.31933%;top:43.38882%;width:12.60504%;height:1.68847%;"></span>
-   <span class="noma-field small" data-out="startTimePdf" style="left:31.83193%;top:43.38882%;width:5.71429%;height:1.68847%;"></span>
+   <span class="noma-field small start-time" data-out="startTimePdf" style="left:31.83193%;top:43.38882%;width:4.87395%;height:1.68847%;"></span>
    <span class="noma-field small" data-out="endDatePdf" style="left:44.58824%;top:43.38882%;width:12.60504%;height:1.68847%;"></span>
    <span class="noma-field small" data-out="endTimePdf" style="left:62.63866%;top:43.38882%;width:5.88235%;height:1.68847%;"></span>
    <span class="noma-field" data-out="contactName" style="left:10.16807%;top:68.51367%;width:37.64706%;height:2.02140%;"></span>
@@ -145,6 +148,39 @@ try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(saved&&
 function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(settings));}catch(e){setMessage('Przeglądarka blokuje zapamiętywanie. Wyeksportuj kopię bazy.');}}
 function allObjects(){return [...INCLUDED_OBJECTS.map(o=>({...o,...(settings.overrides||{})[o.id]})),...(settings.custom||[])];}
 const normalize = text => (text||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ł/g,'l');
+// Odmieniamy wyłącznie pola występujące po słowie „w” w oryginalnym druku.
+// Nie wolno odmieniania stosować do nazwy obiektu ani zapisywanego adresu.
+// Ręczne doprecyzowanie jest obowiązkowe, gdy miasto jest nieznane.
+const CITY_LOCATIVE = Object.freeze({
+ 'Gliwice':'Gliwicach','Katowice':'Katowicach','Czeladź':'Czeladzi',
+ 'Sosnowiec':'Sosnowcu','Ruda Śląska':'Rudzie Śląskiej','Bytom':'Bytomiu',
+ 'Jastrzębie-Zdrój':'Jastrzębiu-Zdroju','Żory':'Żorach','Zabrze':'Zabrzu',
+ 'Piekary Śląskie':'Piekarach Śląskich','Zawiercie':'Zawierciu',
+ 'Siemianowice Śląskie':'Siemianowicach Śląskich','Ustroń':'Ustroniu',
+ 'Chorzów':'Chorzowie','Grzawa':'Grzawie','Góra':'Górze',
+ 'Miedźna':'Miedźnej','Tychy':'Tychach','Świętochłowice':'Świętochłowicach',
+ 'Tarnowskie Góry':'Tarnowskich Górach','Cieszyn':'Cieszynie',
+ 'Mysłowice':'Mysłowicach','Warszawa':'Warszawie','Kraków':'Krakowie',
+ 'Wrocław':'Wrocławiu','Poznań':'Poznaniu','Łódź':'Łodzi',
+ 'Gdańsk':'Gdańsku','Gdynia':'Gdyni','Bielsko-Biała':'Bielsku-Białej',
+ 'Rybnik':'Rybniku','Pszczyna':'Pszczynie','Będzin':'Będzinie',
+ 'Dąbrowa Górnicza':'Dąbrowie Górniczej','Racibórz':'Raciborzu',
+ 'Opole':'Opolu','Lublin':'Lublinie','Radom':'Radomiu',
+ 'Toruń':'Toruniu','Szczecin':'Szczecinie','Bydgoszcz':'Bydgoszczy',
+ 'Częstochowa':'Częstochowie','Rzeszów':'Rzeszowie','Płock':'Płocku',
+ 'Oświęcim':'Oświęcimiu'
+});
+const LOCATIVE_BY_NAME = new Map(Object.entries(CITY_LOCATIVE).map(([city,form])=>[normalize(city),form]));
+const KNOWN_LOCATIVES = new Map(Object.values(CITY_LOCATIVE).map(form=>[normalize(form),form]));
+function locativeCity(city){
+ const key=normalize((city||'').trim().replace(/\s+/g,' '));
+ return LOCATIVE_BY_NAME.get(key)||KNOWN_LOCATIVES.get(key)||'';
+}
+function fillLocatives(){
+ $('cityLocative').value=locativeCity($('city').value);
+ $('pspCityLocative').value=locativeCity($('pspCity').value);
+}
+
 function showResults(){
  const query=normalize($('search').value.trim());const all=allObjects();const filtered=(query?all.filter(x=>normalize([x.name,x.city,x.street,x.source].join(' ')).includes(query)):all).slice(0,10);
  $('search-list').replaceChildren();
@@ -152,13 +188,13 @@ function showResults(){
  filtered.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='object-item'+(settings.selected===o.id?' active':'');const strong=document.createElement('strong');strong.textContent=o.name;const small=document.createElement('small');small.textContent=[o.city,o.street].filter(Boolean).join(' · ')||(o.needsReview?'Dane adresowe do uzupełnienia':'');b.append(strong,small);b.addEventListener('click',()=>choose(o.id));$('search-list').appendChild(b);});
  $('count-label').textContent=all.length+' w bazie';
 }
-function choose(id){const obj=allObjects().find(x=>x.id===id);if(!obj)return;settings.selected=id;persist();$('siteName').value=obj.name||'';$('street').value=obj.street||'';$('city').value=obj.city||'';$('pspCity').value=obj.city||'';$('source-info').textContent=obj.source?'Źródło: lista obiektów w przesłanym Wordzie.':'Obiekt dodany lokalnie.';$('data-warning').className='notice'+(obj.needsReview?' warning':'');$('data-warning').textContent=obj.needsReview?'Uwaga: w źródłowym Wordzie adres jest niepełny, wieloznaczny lub wymaga sprawdzenia. Zweryfikuj wszystkie pola.':'Sprawdź przed wysłaniem: aktualność adresu oraz właściwą miejscowość PSP.';showResults();refreshPreview();}
-function getFields(){return Object.fromEntries(['siteName','street','city','pspCity','works','startDate','startTime','endDate','endTime','contactName','contactPhone','signer'].map(id=>[id,$(id).value.trim()]));}
+function choose(id){const obj=allObjects().find(x=>x.id===id);if(!obj)return;settings.selected=id;persist();$('siteName').value=obj.name||'';$('street').value=obj.street||'';$('city').value=obj.city||'';$('pspCity').value=obj.city||'';fillLocatives();if(obj.cityLocative)$('cityLocative').value=obj.cityLocative;$('source-info').textContent=obj.source?'Źródło: lista obiektów w przesłanym Wordzie.':'Obiekt dodany lokalnie.';$('data-warning').className='notice'+(obj.needsReview?' warning':'');$('data-warning').textContent=obj.needsReview?'Uwaga: w źródłowym Wordzie adres jest niepełny, wieloznaczny lub wymaga sprawdzenia. Zweryfikuj wszystkie pola.':'Sprawdź przed wysłaniem: aktualność adresu oraz właściwą miejscowość PSP.';showResults();refreshPreview();}
+function getFields(){return Object.fromEntries(['siteName','street','city','pspCity','cityLocative','pspCityLocative','works','startDate','startTime','endDate','endTime','contactName','contactPhone','signer'].map(id=>[id,$(id).value.trim()]));}
 function prettyDate(date){if(!/^\d{4}-\d\d-\d\d$/.test(date||''))return '…………';const [y,m,d]=date.split('-');return `${d}.${m}.${y}`;}
 function prettyTime(time){return (time||'……').replace(':','.').replace(/^0(?=\d\.)/,'');}
 function refreshPreview(){
  const d=getFields();
- const values={...d,startDatePdf:prettyDate(d.startDate)+' r.',endDatePdf:prettyDate(d.endDate)+' r.',startTimePdf:'.'+prettyTime(d.startTime),endTimePdf:prettyTime(d.endTime)};
+ const values={...d,startDatePdf:prettyDate(d.startDate)+' r.',endDatePdf:prettyDate(d.endDate)+' r.',startTimePdf:'.\u00a0'+prettyTime(d.startTime),endTimePdf:prettyTime(d.endTime)};
  document.querySelectorAll('[data-out]').forEach(el=>el.textContent=values[el.dataset.out]||'');
  displaySavedSignature();
  requestAnimationFrame(fitAllFields);
@@ -174,7 +210,7 @@ function fitAllFields(){
  });
 }
 function setMessage(msg,problem=false){$('message').textContent=msg;$('message').style.color=problem?'#ad3427':'#59718c';}
-function validate(){const d=getFields();const required=[['siteName','nazwę obiektu'],['street','ulicę i numer'],['city','miejscowość obiektu'],['pspCity','miejscowość PSP'],['works','rodzaj prac'],['contactName','osobę kontaktową'],['contactPhone','telefon kontaktowy'],['startDate','datę od'],['startTime','godzinę od'],['endDate','datę do'],['endTime','godzinę do']];for(const [key,text] of required){if(!d[key]){setMessage('Uzupełnij: '+text,true);$(key).focus();return null;}}
+function validate(){const d=getFields();const required=[['siteName','nazwę obiektu'],['street','ulicę i numer'],['city','miejscowość obiektu'],['pspCity','miejscowość PSP'],['cityLocative','odmienioną nazwę miejscowości obiektu po „w”'],['pspCityLocative','odmienioną nazwę miejscowości PSP po „w”'],['works','rodzaj prac'],['contactName','osobę kontaktową'],['contactPhone','telefon kontaktowy'],['startDate','datę od'],['startTime','godzinę od'],['endDate','datę do'],['endTime','godzinę do']];for(const [key,text] of required){if(!d[key]){setMessage('Uzupełnij: '+text,true);$(key).focus();return null;}}
  const start=new Date(`${d.startDate}T${d.startTime}:00`), end=new Date(`${d.endDate}T${d.endTime}:00`);
  if(!Number.isFinite(+start)||!Number.isFinite(+end)||end<=start){setMessage('Koniec odłączenia musi być późniejszy niż początek.',true);$('endTime').focus();return null;}
  return d;
@@ -273,10 +309,10 @@ async function downloadPdf(){
  }catch(e){setMessage('Nie udało się utworzyć PDF: '+(e?.message||String(e)),true);}
  finally{exportingPdf=false;button.disabled=false;button.textContent=label;}
 }
-function saveObject(){const d=getFields();if(!d.siteName){setMessage('Najpierw wpisz nazwę obiektu.',true);return;}const id=settings.selected;const entry={id:id&&allObjects().some(x=>x.id===id)?id:'local-'+Date.now(),name:d.siteName,city:d.city,street:d.street,source:'',needsReview:!(d.city&&d.street)};
+function saveObject(){const d=getFields();if(!d.siteName){setMessage('Najpierw wpisz nazwę obiektu.',true);return;}const id=settings.selected;const entry={id:id&&allObjects().some(x=>x.id===id)?id:'local-'+Date.now(),name:d.siteName,city:d.city,cityLocative:d.cityLocative,street:d.street,source:'',needsReview:!(d.city&&d.street)};
  if(id&&INCLUDED_OBJECTS.some(x=>x.id===id))settings.overrides[id]=entry;
  else{const pos=settings.custom.findIndex(x=>x.id===entry.id);if(pos>=0)settings.custom[pos]=entry;else settings.custom.push(entry);}settings.selected=entry.id;persist();showResults();setMessage('Zapisano dane obiektu na tym urządzeniu.');}
-function newObject(){settings.selected=null;$('search').value='';['siteName','street','city','pspCity'].forEach(id=>$(id).value='');$('source-info').textContent='Nowy obiekt — wpisz dane i zapisz.';showResults();refreshPreview();$('siteName').focus();}
+function newObject(){settings.selected=null;$('search').value='';['siteName','street','city','pspCity','cityLocative','pspCityLocative'].forEach(id=>$(id).value='');$('source-info').textContent='Nowy obiekt — wpisz dane i zapisz.';showResults();refreshPreview();$('siteName').focus();}
 function downloadBackup(){const b=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),overrides:settings.overrides||{},custom:settings.custom||[]},null,2)],{type:'application/json;charset=utf-8'});downloadBlob(b,'druki_ppoz_kopia_bazy.json');setMessage('Zapisano kopię lokalnych zmian i nowych obiektów.');}
 async function importBackup(ev){const file=ev.target.files?.[0];if(!file)return;try{const input=JSON.parse(await file.text());if(input.version!==1||!input.overrides||!Array.isArray(input.custom))throw Error('Nieprawidłowy plik bazy.');if(!confirm('Wczytać kopię i zastąpić własne zapisane zmiany obiektów?'))return;settings.overrides=input.overrides;settings.custom=input.custom;persist();showResults();choose('word-104');setMessage('Wczytano kopię bazy.');}catch(e){setMessage('Nie udało się wczytać bazy: '+e.message,true);}finally{ev.target.value='';}}
 function localDateString(date){return [date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');}
@@ -350,10 +386,12 @@ function init(){const now=new Date();
  const presets=$('contactPreset');CONTACTS.forEach((x,i)=>{const opt=document.createElement('option');opt.value=String(i);opt.textContent=x.name+' · '+x.phone;presets.appendChild(opt)});const extra=document.createElement('option');extra.value='other';extra.textContent='Inna osoba (wpisz ręcznie)';presets.appendChild(extra);
  function applyContact(){const chosen=CONTACTS[Number(presets.value)];if(chosen){$('contactName').value=chosen.name;$('contactPhone').value=chosen.phone;$('signer').value=chosen.name;}refreshPreview();}presets.addEventListener('change',applyContact);applyContact();
  document.querySelectorAll('input,textarea,select').forEach(el=>{if(el.id!=='search')el.addEventListener('input',refreshPreview)});
+ $('city').addEventListener('input',()=>{$('cityLocative').value=locativeCity($('city').value);refreshPreview();});
+ $('pspCity').addEventListener('input',()=>{$('pspCityLocative').value=locativeCity($('pspCity').value);refreshPreview();});
  $('search').addEventListener('input',showResults);$('new-site').addEventListener('click',newObject);$('save-site').addEventListener('click',saveObject);$('signature-file').addEventListener('change',importPersonSignature);$('remove-signature').addEventListener('click',removePersonSignature);$('downloadPdf').addEventListener('click',downloadPdf);$('export-data').addEventListener('click',downloadBackup);$('import-btn').addEventListener('click',()=>$('import-file').click());$('import-file').addEventListener('change',importBackup);
  choose(allObjects().some(x=>x.id===settings.selected)?settings.selected:'word-104');
  // Funkcje testowe do automatycznej weryfikacji z użyciem przeglądarki, bez sieci.
- window.__drukiTest={allObjects,getFields,prettyDate,prettyTime,validate,signatureKey,displaySavedSignature,makePdfCanvas,pdfFromCanvas};
+ window.__drukiTest={allObjects,getFields,prettyDate,prettyTime,validate,signatureKey,displaySavedSignature,locativeCity,makePdfCanvas,pdfFromCanvas};
 }
 init();
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
