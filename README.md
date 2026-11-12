@@ -54,3 +54,12 @@ Jeżeli aplikacja była już instalowana, zamknij ją i otwórz ponownie, aby po
 Zbudowany projekt Android znajduje się w `app/`. APK uruchamia lokalny formularz NOMA 2 offline, z brandingiem **ATOM SERWIS**, czerwono-granatową szatą graficzną i wozem strażackim. Zapisywanie PDF korzysta z systemowego okna zapisu Android. Podpisy są zapisywane lokalnie, nie trafiają do publicznego repozytorium ani APK.
 
 Zobacz instrukcję [ANDROID-INSTRUKCJA.md](ANDROID-INSTRUKCJA.md) i zakładkę GitHub Actions `Android APK • Druki PPOŻ`. Testowy APK diagnostyczny może wymagać odinstalowania przy przyszłej przebudowie, bo ma tymczasowy klucz debug. Do trwałych aktualizacji niezbędny jest stabilny klucz wydania.
+
+
+## Android 1.1.0: zakładki i etapy
+
+Ekran Start pokazuje osobne kafelki: **Nowe zgłoszenie**, **Moje obiekty**, **Osoby i podpisy**, **Dokumenty PDF** i **Ustawienia**. Zgłoszenie ma 4 kroki: Obiekt i zakres prac → Termin odłączenia → Podpis → Podgląd / PDF. Niebiesko-czerwona szata ATOM SERWIS występuje tylko w interfejsie, nie na oficjalnym druku NOMA 2.
+
+Historia PDF to lista nazw i dat lokalnych wygenerowań — rzeczywiste PDF zapisuje się w wybranym przez użytkownika folderze Androida. Brak automatycznej wysyłki do operatora. Baza 73 obiektów i podpisy pozostają lokalne.
+
+**Podpisywanie aktualizacji:** pierwszy diagnostyczny APK był podpisany tymczasowym kluczem debug. Został przygotowany osobny stały klucz wydania, ale aktywacja zautomatyzowanych podpisanych wydań wymaga ustawienia sekretów GitHub. Do czasu tej konfiguracji workflow publikuje tylko testowy APK. Patrz `ANDROID-INSTRUKCJA.md`. Nigdy nie dodawaj plików klucza ani danych podpisu do publicznego repozytorium.

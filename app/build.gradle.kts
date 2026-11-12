@@ -7,13 +7,27 @@ android {
         applicationId = "pl.atomservice.drukippoz"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.1.0"
+    }
+    signingConfigs {
+        create("stableRelease") {
+            val keystorePath = System.getenv("PPOZ_SIGNING_KEYSTORE")
+            if (!keystorePath.isNullOrBlank()) {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("PPOZ_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("PPOZ_KEY_ALIAS")
+                keyPassword = System.getenv("PPOZ_KEY_PASSWORD")
+            }
+        }
     }
     buildTypes {
         release {
             isMinifyEnabled = false
             isShrinkResources = false
+            if (!System.getenv("PPOZ_SIGNING_KEYSTORE").isNullOrBlank()) {
+                signingConfig = signingConfigs.getByName("stableRelease")
+            }
         }
     }
     compileOptions {

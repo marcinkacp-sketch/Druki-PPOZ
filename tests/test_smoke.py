@@ -8,6 +8,13 @@ class TestDrukiPPOZ(unittest.TestCase):
   self.assertEqual(len(objects),73)
   self.assertEqual(len({o['id'] for o in objects}),73)
   self.assertTrue(all(o.get('name') for o in objects))
+ def test_tabs_and_android_version(self):
+  index=(ROOT/'app/src/main/assets/index.html').read_text('utf8')
+  for token in ['app-bottom-nav','setupAppTabs','data-screen="home"','data-screen="request"','data-screen="objects"','data-part="signatures"','document-history','addDocumentHistory']:
+   self.assertIn(token,index)
+  gradle=(ROOT/'app/build.gradle.kts').read_text('utf8')
+  self.assertIn('versionCode = 2',gradle)
+  self.assertIn('stableRelease',gradle)
  def test_official_template(self):
   f=ROOT/'templates/noma2_blank.png'
   self.assertTrue(f.exists())

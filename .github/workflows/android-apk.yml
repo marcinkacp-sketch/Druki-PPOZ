@@ -1,4 +1,4 @@
-name: Android APK • Druki PPOŻ
+name: Android APK - Druki PPOZ
 on:
   push:
     branches: [main]
@@ -34,6 +34,12 @@ jobs:
         run: |
           yes | sdkmanager --licenses || true
           sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Offline source checks
+        run: |
+          python -m unittest discover -s tests -p 'test_smoke.py'
+          test -s app/src/main/assets/index.html
+          grep -q 'app-bottom-nav' app/src/main/assets/index.html
+          grep -q 'addDocumentHistory' app/src/main/assets/index.html
       - name: Build installable diagnostic APK
         run: gradle --no-daemon :app:assembleDebug
       - name: Verify APK and contents
@@ -49,3 +55,54 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
           if-no-files-found: error
+
+      # The stable key must NEVER be published in the repository.
+      - name: Detect stable release key
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          PPOZ_KEYSTORE_BASE64: ${{ secrets.PPOZ_KEYSTORE_BASE64 }}
+          PPOZ_KEYSTORE_PASSWORD: ${{ secrets.PPOZ_KEYSTORE_PASSWORD }}
+          PPOZ_KEY_ALIAS: ${{ secrets.PPOZ_KEY_ALIAS }}
+          PPOZ_KEY_PASSWORD: ${{ secrets.PPOZ_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$PPOZ_KEYSTORE_BASE64" && -n "$PPOZ_KEYSTORE_PASSWORD" && -n "$PPOZ_KEY_ALIAS" && -n "$PPOZ_KEY_PASSWORD" ]]; then
+            echo "PPOZ_RELEASE_READY=true" >> "$GITHUB_ENV"
+          else
+            echo "PPOZ_RELEASE_READY=false" >> "$GITHUB_ENV"
+            echo "No stable release key configured. Publishing debug diagnostic APK only."
+          fi
+      - name: Restore stable signing key
+        if: env.PPOZ_RELEASE_READY == 'true'
+        env:
+          PPOZ_KEYSTORE_BASE64: ${{ secrets.PPOZ_KEYSTORE_BASE64 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          printf '%s' "$PPOZ_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/druki-ppoz-release.p12"
+          test -s "$RUNNER_TEMP/druki-ppoz-release.p12"
+          echo "PPOZ_SIGNING_KEYSTORE=$RUNNER_TEMP/druki-ppoz-release.p12" >> "$GITHUB_ENV"
+      - name: Compile and verify stable signed release
+        if: env.PPOZ_RELEASE_READY == 'true'
+        env:
+          PPOZ_KEYSTORE_PASSWORD: ${{ secrets.PPOZ_KEYSTORE_PASSWORD }}
+          PPOZ_KEY_ALIAS: ${{ secrets.PPOZ_KEY_ALIAS }}
+          PPOZ_KEY_PASSWORD: ${{ secrets.PPOZ_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon :app:assembleRelease
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs app/build/outputs/apk/release/app-release.apk
+      - name: Publish updateable signed release APK
+        if: env.PPOZ_RELEASE_READY == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Druki-PPOZ-STALA-PODPISANA-APK
+          path: app/build/outputs/apk/release/app-release.apk
+          retention-days: 30
+          if-no-files-found: error
+      - name: Remove key file
+        if: always()
+        run: rm -f "$RUNNER_TEMP/druki-ppoz-release.p12"
