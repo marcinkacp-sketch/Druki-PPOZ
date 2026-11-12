@@ -42,4 +42,4 @@ Program **nie odłącza systemu** i nie przekazuje zgłoszenia operatorowi. Trze
 
 ## Testy automatyczne
 
-Test przeglądarkowy (opcjonalny) wymaga `pip install playwright python-docx pypdf` oraz lokalnej przeglądarki Chromium. Uruchom `python tests/test_app_manual.py`. Sprawdza daty, puste godziny, wyszukiwanie, wypełnienie obiektu, walidację, DOCX i jednotronicowy wydruk PDF.
+W repozytorium dostępny jest test kontrolny bez dodatkowych bibliotek: `python -m unittest discover -s tests -p test_smoke.py`. Sprawdza bazę 73 obiektów, manifest PWA i podstawowe pliki aplikacji. Testy przeglądarkowe oraz generowania Word/PDF przeprowadzono podczas przygotowania wersji lokalnej; skrypt tych testów nie jest zawarty w repozytorium.
